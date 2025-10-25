@@ -9,6 +9,7 @@ class Attack {
     damageType type;
     int damage;
 
+
 public:
 
     Attack (damageType type, int damage) : type(type), damage(damage) {}
@@ -184,7 +185,7 @@ public:
 
         if (getHealthPoints() < getMaxHealthPoints()/2) {
             heal(2*healAmount);
-            std::cout<<getName()<<" healed for"<<healAmount<<" HP!\n";
+            std::cout<<getName()<<" healed for "<<healAmount<<" HP!\n";
             attack.increaseDamage(1);
             return attack;
         }
@@ -192,18 +193,41 @@ public:
         return attack;
     }
 
-    static Attack bloodSplatter() {
+    Attack bloodSplatter() {
         // splatters blood on opponent
-        // there's a chance the blood infects the opponent,
+        // if bellow half hp the blood infects the opponent,
         // dealing extra damage
         Attack attack(damageType::Blood, 1);
-        int infectedDamage = rand() % 3;
+        int infectedDamage = 0;
+
+        if (getHealthPoints() < getMaxHealthPoints()/2) {
+            infectedDamage = 1;
+        }
 
         attack.increaseDamage(infectedDamage) ;
 
         return attack;
     }
 
+    void bloodSacrifice() {
+
+        // Unless it will kill you, sacrifice 2 hp
+        if (getHealthPoints() > 2) {
+            heal(-2);
+            std::cout<<getName()<<" sacrficied 2 HP!\n";
+        }
+        else
+            std::cout<<getName()<<" attemped a blood sacrifice\n ...but it failed.\n";
+
+    }
+
+    Attack bloodTransfusion() {
+
+        Attack attack(damageType::Blood, 3);
+
+
+
+    }
 
 };
 
@@ -217,6 +241,7 @@ int main() {
 
     player2.printHealthBar();
     player2.takeDamage(player1.swordSlash());
+    player2.bloodSacrifice();
     player2.printHealthBar();
     player1.takeDamage(player2.fangBite());
     player1.printHealthBar();
