@@ -223,9 +223,18 @@ public:
 
     Attack bloodTransfusion() {
 
+        // can only be used when 1hp
+        // deals very high blood dmg
         Attack attack(damageType::Blood, 3);
 
+        if (getHealthPoints() == 1) {
+            std::cout<<getName()<<" used their last strength!\n";
+            return attack;
+        }
 
+        attack.increaseDamage(-3);
+        std::cout<<getName()<<" is not yet strong enough!\n";
+        return attack;
 
     }
 
