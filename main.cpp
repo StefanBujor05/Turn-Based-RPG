@@ -1,50 +1,255 @@
-#include <iostream>
-#include <array>
+#include<iostream>
+#include<random>
+#include <variant>
+//#include<cstring>
+
+enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
+
+class Attack {
+    damageType type;
+    int damage;
+
+public:
+
+    Attack (damageType type, int damage) : type(type), damage(damage) {}
+
+    void increaseDamage(const int amount) {
+        damage += amount;
+    }
+
+    [[nodiscard]]int getDamage() const{
+        return damage;
+    }
+
+    [[nodiscard]]damageType getType() const {
+        return type;
+    }
+};
+
+class Entity {
+
+    const std::string name;
+    int healthPoints;
+    int maxHealthPoints;
+
+public:
+
+    //getters
+    [[nodiscard]] int getHealthPoints() const {
+        return healthPoints;
+    }
+    [[nodiscard]] int getMaxHealthPoints() const {
+        return maxHealthPoints;
+    }
+    [[nodiscard]] std::string getName() const {
+        return name;
+    }
+
+
+
+    void increaseMaxHealthPoints(const int amount) {
+        maxHealthPoints += amount;
+    }
+
+    void heal(const int healAmount) {
+        if (healAmount + healthPoints > maxHealthPoints)
+            healthPoints = maxHealthPoints;
+        else
+            healthPoints += healAmount;
+    }
+
+
+    void printHealthBar() const {
+        std::cout<<getName()<<": "<<healthPoints<<"/"<<maxHealthPoints<<' ';
+        for (int i = 0; i < healthPoints; i++) {
+            std::cout<<"|";
+        }
+        for (int i = 0; i < maxHealthPoints-healthPoints; i++) {
+            std::cout<<".";
+        }
+        std::cout<<"\n";
+
+    }
+    // constructor
+
+    Entity(const std::string &name, int healthPoints, int maxHealthPoints)
+        : name(name), healthPoints(healthPoints),  maxHealthPoints(maxHealthPoints){}
+
+    // methods
+
+    void loseHealth(int damage) {
+        if(healthPoints < damage) {
+            healthPoints = 0;
+        }
+        healthPoints -= damage;
+    }
+
+};
+
+class Knight : public Entity {
+
+     int bonus = 0;
+public:
+
+    [[nodiscard]]int getBonus() const {
+        return bonus;
+    }
+
+    [[nodiscard]] int incBonus(int amount) const {
+
+        return bonus + amount;
+    }
+
+    Knight(const std::string &name, int healthPoints, int maxHealthPoints)
+        : Entity(name, healthPoints, maxHealthPoints) {}
+
+
+    void takeDamage(const Attack& attack) {
+        int damageVal = attack.getDamage(); // initial dmg value
+
+        if (attack.getType() == damageType::Normal    ||
+            attack.getType() == damageType::Slashing  ||
+            attack.getType() == damageType::Piercing) {
+
+            damageVal/=2;
+        }
+        else
+            if (attack.getType() == damageType::Magic) {
+                damageVal*=2;
+            }
+
+        if (damageVal == 0) {
+            std::cout<<"...but "<<getName()<<" isn't phased\n";
+        }
+        else
+            std::cout<<getName()<<" took "<<damageVal<<" damage!\n";
+        loseHealth(damageVal);
+
+    }
+
+    // ABILITIES -----------------------------------------------------------------------
+    [[nodiscard]]Attack swordSlash() const {
+        //slashes with a longSword
+        Attack attack(damageType::Slashing, 1);
+        if (getHealthPoints() == getMaxHealthPoints())
+            attack.increaseDamage(1);
+
+        std::cout<<Knight::getName()<<" used Sword Slash!\n";
+        return attack;
+    }
+
+    void holyVow() {
+        // heal 1 hp
+        // if hp is max, gain 1 max hp and heal
+        int healAmount = 1;
+        std::cout<<Knight::getName()<<" used Holy Vow!\n";
+        if (getHealthPoints() == getMaxHealthPoints()) {
+            increaseMaxHealthPoints(1);
+        }
+        heal(healAmount);
+    }
+
+};
+
+class Vampire : public Entity {
+
+public:
+
+    Vampire (const std::string &name, int healthPoints, int maxHealthPoints)
+            : Entity(name, healthPoints, maxHealthPoints) {}
+
+    void takeDamage(const Attack& attack) {
+        int damageVal = attack.getDamage(); // initial dmg value
+
+        // typing
+        if (attack.getType() == damageType::Blood ||
+            attack.getType() == damageType::Magic){
+
+            damageVal/=2;
+            }
+        else
+            if (attack.getType() == damageType:: Holy ||
+                attack.getType() == damageType:: Piercing) {
+                damageVal*=2;
+            }
+
+        if (damageVal == 0) {
+            std::cout<<"...but "<<getName()<<" ignored it\n";
+        }
+        else
+            std::cout<<getName()<<" took "<<damageVal<<" damage!\n";
+        loseHealth(damageVal);
+
+    }
+
+    // ABILITIES -----------------------------------------------------------------------
+    Attack fangBite(){
+        // deal damage and heal
+        // doubled when below 50% hp
+        Attack attack(damageType::Piercing, 1);
+        int healAmount = 1;
+
+        std::cout<<getName()<<" used Fang Bite!\n";
+
+        if (getHealthPoints() < getMaxHealthPoints()/2) {
+            heal(2*healAmount);
+            std::cout<<getName()<<" healed for"<<healAmount<<" HP!\n";
+            attack.increaseDamage(1);
+            return attack;
+        }
+
+        return attack;
+    }
+
+    static Attack bloodSplatter() {
+        // splatters blood on opponent
+        // there's a chance the blood infects the opponent,
+        // dealing extra damage
+        Attack attack(damageType::Blood, 1);
+        int infectedDamage = rand() % 3;
+
+        attack.increaseDamage(infectedDamage) ;
+
+        return attack;
+    }
+
+
+};
 
 int main() {
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
+
+    int gameOver = 0;
+    int playerTurn = 0;
+    int numTurn = 1;
+    Knight player1("Arthur", 10, 10);
+    Vampire player2("Vladimir", 10, 10);
+
+    player2.printHealthBar();
+    player2.takeDamage(player1.swordSlash());
+    player2.printHealthBar();
+    player1.takeDamage(player2.fangBite());
+    player1.printHealthBar();
+    player1.holyVow();
+    player1.printHealthBar();
+
+    // main loop
+    while (!gameOver) {
+        // player turn
+        if (playerTurn == 0) {
+
+        }
+        // enemy turn
+        else {
+
+        }
+
+
+        if (player1.getHealthPoints() == 0 || player2.getHealthPoints() == 0) {
+            gameOver = 1;
+        }
+
+
+        numTurn++;
     }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
-    ///
-    ///////////////////////////////////////////////////////////////////////////
     return 0;
 }
