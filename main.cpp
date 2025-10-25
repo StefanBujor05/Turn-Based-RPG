@@ -51,7 +51,7 @@ public:
     [[nodiscard]] int getMaxHealthPoints() const {
         return maxHealthPoints;
     }
-    [[nodiscard]] const std::string getName() const {
+    [[nodiscard]] const std::string& getName() const {
         return name;
     }
 
