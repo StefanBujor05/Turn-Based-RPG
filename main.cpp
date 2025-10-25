@@ -51,7 +51,7 @@ public:
     [[nodiscard]] int getMaxHealthPoints() const {
         return maxHealthPoints;
     }
-    [[nodiscard]] std::string getName() const {
+    [[nodiscard]] const std::string getName() const {
         return name;
     }
 
@@ -331,7 +331,7 @@ int main() {
     // main loop
     while (!gameOver) {
 
-        std::cout<<playerTurn<<"\n";
+        //std::cout<<playerTurn<<"\n";
         player1.printHealthBar();
         player2.printHealthBar();
 
