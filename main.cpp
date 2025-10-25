@@ -88,17 +88,8 @@ public:
 
 class Knight : public Entity {
 
-     int bonus = 0;
+
 public:
-
-    [[nodiscard]]int getBonus() const {
-        return bonus;
-    }
-
-    [[nodiscard]] int incBonus(int amount) const {
-
-        return bonus + amount;
-    }
 
     Knight(const std::string &name, int healthPoints, int maxHealthPoints)
         : Entity(name, healthPoints, maxHealthPoints) {}
