@@ -1,14 +1,8 @@
 #include<iostream>
 #include<random>
-#include<time.h>
+#include<ctime>
 //#include <variant>
 //#include<cstring>
-
-void cleartty(void)
-{
-    fputs("\x1b[1;1H\x1b[2J", stdout);
-    fflush(stdout);
-}
 
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 
@@ -104,7 +98,7 @@ public:
     ~Entity()= default;
 };
 
-std::ostream& operator<<(std::ostream& os, Entity& entity) {
+std::ostream& operator<<(std::ostream& os, const Entity& entity) {
     os<<entity.getHealthPoints()<<' '<<entity.getMaxHealthPoints()<< ' '<< entity.getName()<<'\n';
     return os;
 }
@@ -313,8 +307,8 @@ public:
 int main() {
 
     int gameOver = 0;
-    int playerTurn = 1;
-    int numTurn = 1;
+    int playerTurn = 0;
+    // int numTurn = 1;
     time_t t;
     int playerChoice;
     int player2Choice;
@@ -382,6 +376,7 @@ int main() {
                     break;
                 case 4:
                     player2.bloodSacrifice();
+                    break;
                 default:
                     std::cout<<player2.getName()<<" waits menacingly...\n";
                     break;
@@ -405,7 +400,7 @@ int main() {
             {playerTurn = 0;}
         else
             {playerTurn = 1;}
-        numTurn++;
+        //numTurn++;
 
 
     }
