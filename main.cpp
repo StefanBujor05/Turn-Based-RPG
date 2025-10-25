@@ -239,6 +239,7 @@ int main() {
     Knight player1("Arthur", 10, 10);
     Vampire player2("Vladimir", 10, 10);
 
+    // test
     player2.printHealthBar();
     player2.takeDamage(player1.swordSlash());
     player2.bloodSacrifice();
