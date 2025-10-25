@@ -1,18 +1,21 @@
 #include<iostream>
 #include<random>
+#include<time.h>
 //#include <variant>
 //#include<cstring>
 
-enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
+void cleartty(void)
+{
+    fputs("\x1b[1;1H\x1b[2J", stdout);
+    fflush(stdout);
+}
 
+enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 
 
 class Attack {
     damageType type;
     int damage = 0;
-
-
-
 
 public:
 
@@ -136,11 +139,13 @@ public:
             attack.getType() == damageType::Slashing  ||
             attack.getType() == damageType::Piercing) {
 
+            std::cout<<"It's not very effective!\n";
             damageVal/=2;
         }
         else
             if (attack.getType() == damageType::Magic) {
                 damageVal*=2;
+                std::cout << "It's super effective!";
             }
 
         if (damageVal == 0) {
@@ -218,11 +223,13 @@ public:
             attack.getType() == damageType::Magic){
 
             damageVal/=2;
+            std::cout << "It's not very effective!\n";
             }
         else
             if (attack.getType() == damageType:: Holy ||
                 attack.getType() == damageType:: Piercing) {
                 damageVal*=2;
+                std::cout << "It's super effective!\n";
             }
 
         if (damageVal == 0) {
@@ -306,9 +313,12 @@ public:
 int main() {
 
     int gameOver = 0;
-    int playerTurn = 0;
+    int playerTurn = 1;
     int numTurn = 1;
+    time_t t;
     int playerChoice;
+    int player2Choice;
+
     Knight player1("Arthur", 10, 10);
     Vampire player2("Vladimir", 10, 10);
 
@@ -327,6 +337,7 @@ int main() {
     // main loop
     while (!gameOver) {
 
+        std::cout<<playerTurn<<"\n";
         player1.printHealthBar();
         player2.printHealthBar();
 
@@ -336,9 +347,9 @@ int main() {
             std::cout<<"Choose and attack: \n";
             std::cout<<"1. Sword Slash \n2. Preparation Lunge \n3. Holy Vow \n4. TODO\n";
             std::cout<<"Your choice:  ";
-            std::cin>>playerTurn;
+            std::cin>>playerChoice;
 
-            switch (playerTurn) {
+            switch (playerChoice) {
                 case 1:
                     player2.takeDamage(player1.swordSlash());
                     break;
@@ -356,16 +367,47 @@ int main() {
         }
         // enemy turn
         else {
+            srand((unsigned) time(&t));
+            player2Choice = rand()%4 + 1;
+
+            switch (player2Choice) {
+                case 1:
+                    player1.takeDamage(player2.fangBite());
+                    break;
+                case 2:
+                    player1.takeDamage(player2.bloodSplatter());
+                    break;
+                case 3:
+                    player1.takeDamage(player2.bloodTransfusion());
+                    break;
+                case 4:
+                    player2.bloodSacrifice();
+                default:
+                    std::cout<<player2.getName()<<" waits menacingly...\n";
+                    break;
+
+            }
 
         }
 
         // end conditions
-        if (player1.getHealthPoints() == 0 || player2.getHealthPoints() == 0) {
+        if (player1.getHealthPoints() <= 0) {
+            std::cout<<player2.getName()<<" has won!\n";
+            gameOver = 1;
+        }
+        else if (player2.getHealthPoints() <= 0) {
+            std::cout<<player1.getName()<<" has won!\n";
             gameOver = 1;
         }
 
-        playerTurn = !playerTurn;
+        std::cout<<"\n-------------------------------------\n";
+        if (playerTurn == 1)
+            {playerTurn = 0;}
+        else
+            {playerTurn = 1;}
         numTurn++;
+
+
     }
     return 0;
 }
