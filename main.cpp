@@ -5,11 +5,13 @@
 
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 
+
+
 class Attack {
     damageType type;
-    int damage;
-    int bonusDamage = 0;
-    //int usedBonus = 0;
+    int damage = 0;
+
+
 
 
 public:
@@ -20,21 +22,8 @@ public:
         damage += amount;
     }
 
-    void increaseBonus(const int amount) {
-        bonusDamage += amount;
-    }
-
-
 
     // GETTERS <------------------------------->
-
-    [[nodiscard]]int getBonusDamage() const {
-        return bonusDamage;
-    }
-
-    // [[nodiscard]]int getUsedBonus() const {
-    //     return usedBonus;
-    // }
 
     [[nodiscard]]int getDamage() const{
         return damage;
@@ -44,14 +33,17 @@ public:
         return type;
     }
 
+
     ~Attack()= default;
 };
+
 
 class Entity {
 
     const std::string name;
     int healthPoints;
     int maxHealthPoints;
+
 
 public:
 
@@ -116,11 +108,25 @@ std::ostream& operator<<(std::ostream& os, Entity& entity) {
 
 class Knight : public Entity {
 
+    int bonusDamage = 0;
 
 public:
 
     Knight(const std::string &name, int healthPoints, int maxHealthPoints)
         : Entity(name, healthPoints, maxHealthPoints) {}
+
+
+    [[nodiscard]] int getBonusDamage() const {
+        return bonusDamage;
+    }
+
+    void increaseBonusDamage(const int amount) {
+        bonusDamage += amount;
+    }
+
+    void resetBonusDamage() {
+        bonusDamage = 0;
+    }
 
 
     void takeDamage(const Attack& attack) {
@@ -150,11 +156,18 @@ public:
     }
 
     // ABILITIES -----------------------------------------------------------------------
-    [[nodiscard]]Attack swordSlash() const {
+    [[nodiscard]]Attack swordSlash() {
         //slashes with a longSword
         Attack attack(damageType::Slashing, 1);
         if (getHealthPoints() == getMaxHealthPoints())
             attack.increaseDamage(1);
+
+
+        if (getBonusDamage()) {
+            attack.increaseDamage(getBonusDamage());
+            resetBonusDamage();
+
+        }
 
         std::cout<<Knight::getName()<<" used Sword Slash!\n";
         return attack;
@@ -171,7 +184,7 @@ public:
         heal(healAmount);
     }
 
-    Attack preparationLunge() const {
+    Attack preparationLunge() {
 
         // Lunge at the enemy, dealing piercing damage and position yourself
         // Next attack is enchanced
@@ -179,7 +192,8 @@ public:
         Attack attack(damageType::Piercing, 1);
         std::cout<<Knight::getName()<<" used Preparation Lunge!\n";
 
-        attack.increaseDamage(1);
+        if (!getBonusDamage())
+            increaseBonusDamage(1);
 
         return attack;
 
@@ -216,6 +230,7 @@ public:
         }
         else
             std::cout<<getName()<<" took "<<damageVal<<" damage!\n";
+
         loseHealth(damageVal);
 
     }
@@ -293,38 +308,63 @@ int main() {
     int gameOver = 0;
     int playerTurn = 0;
     int numTurn = 1;
+    int playerChoice;
     Knight player1("Arthur", 10, 10);
     Vampire player2("Vladimir", 10, 10);
 
     // test
-    std::cout<<player1;
-    player2.printHealthBar();
-    player2.takeDamage(player1.swordSlash());
-    player2.bloodSacrifice();
-    player2.printHealthBar();
-    player1.takeDamage(player2.fangBite());
-    player1.printHealthBar();
-    player1.holyVow();
-    player1.printHealthBar();
-    player1.takeDamage(player2.bloodTransfusion());
+    // std::cout<<player1;
+    // player2.printHealthBar();
+    // player2.takeDamage(player1.swordSlash());
+    // player2.bloodSacrifice();
+    // player2.printHealthBar();
+    // player1.takeDamage(player2.fangBite());
+    // player1.printHealthBar();
+    // player1.holyVow();
+    // player1.printHealthBar();
+    // player1.takeDamage(player2.bloodTransfusion());
 
     // main loop
     while (!gameOver) {
+
+        player1.printHealthBar();
+        player2.printHealthBar();
+
         // player turn
         if (playerTurn == 0) {
 
+            std::cout<<"Choose and attack: \n";
+            std::cout<<"1. Sword Slash \n2. Preparation Lunge \n3. Holy Vow \n4. TODO\n";
+            std::cout<<"Your choice:  ";
+            std::cin>>playerTurn;
+
+            switch (playerTurn) {
+                case 1:
+                    player2.takeDamage(player1.swordSlash());
+                    break;
+                case 2:
+                    player2.takeDamage(player1.preparationLunge());
+                    break;
+                case 3:
+                    player1.holyVow();
+                    break;
+                default:
+                    std::cout<<player1.getName()<<" stands firmly!\n";
+                    break;
+
+            }
         }
         // enemy turn
         else {
 
         }
 
-
+        // end conditions
         if (player1.getHealthPoints() == 0 || player2.getHealthPoints() == 0) {
             gameOver = 1;
         }
 
-
+        playerTurn = !playerTurn;
         numTurn++;
     }
     return 0;
