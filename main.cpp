@@ -1,6 +1,6 @@
 #include<iostream>
 #include<random>
-#include <variant>
+//#include <variant>
 //#include<cstring>
 
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
@@ -8,6 +8,8 @@ enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 class Attack {
     damageType type;
     int damage;
+    int bonusDamage = 0;
+    //int usedBonus = 0;
 
 
 public:
@@ -18,6 +20,22 @@ public:
         damage += amount;
     }
 
+    void increaseBonus(const int amount) {
+        bonusDamage += amount;
+    }
+
+
+
+    // GETTERS <------------------------------->
+
+    [[nodiscard]]int getBonusDamage() const {
+        return bonusDamage;
+    }
+
+    // [[nodiscard]]int getUsedBonus() const {
+    //     return usedBonus;
+    // }
+
     [[nodiscard]]int getDamage() const{
         return damage;
     }
@@ -25,6 +43,8 @@ public:
     [[nodiscard]]damageType getType() const {
         return type;
     }
+
+    ~Attack()= default;
 };
 
 class Entity {
@@ -85,6 +105,8 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream &os, const Entity &e);
+
+    ~Entity()= default;
 };
 
 std::ostream& operator<<(std::ostream& os, Entity& entity) {
@@ -117,10 +139,13 @@ public:
 
         if (damageVal == 0) {
             std::cout<<"...but "<<getName()<<" isn't phased\n";
+
         }
-        else
+        else if (damageVal > 0) {
             std::cout<<getName()<<" took "<<damageVal<<" damage!\n";
-        loseHealth(damageVal);
+            loseHealth(damageVal);
+        }
+
 
     }
 
@@ -146,7 +171,23 @@ public:
         heal(healAmount);
     }
 
+    Attack preparationLunge() const {
+
+        // Lunge at the enemy, dealing piercing damage and position yourself
+        // Next attack is enchanced
+
+        Attack attack(damageType::Piercing, 1);
+        std::cout<<Knight::getName()<<" used Preparation Lunge!\n";
+
+        attack.increaseDamage(1);
+
+        return attack;
+
+    }
+
+    ~Knight()= default;
 };
+
 
 class Vampire : public Entity {
 
@@ -237,11 +278,13 @@ public:
             return attack;
         }
 
-        attack.increaseDamage(-3);
-        std::cout<<getName()<<" is not yet strong enough!\n";
+        attack.increaseDamage(-4);
+        std::cout<<getName()<<" attempted a blood transfusion...\n...but is not yet strong enough";
         return attack;
 
     }
+
+    ~Vampire()= default;
 
 };
 
@@ -263,6 +306,7 @@ int main() {
     player1.printHealthBar();
     player1.holyVow();
     player1.printHealthBar();
+    player1.takeDamage(player2.bloodTransfusion());
 
     // main loop
     while (!gameOver) {
