@@ -47,7 +47,6 @@ public:
     }
 
 
-
     void increaseMaxHealthPoints(const int amount) {
         maxHealthPoints += amount;
     }
@@ -85,7 +84,13 @@ public:
         healthPoints -= damage;
     }
 
+    friend std::ostream& operator<<(std::ostream &os, const Entity &e);
 };
+
+std::ostream& operator<<(std::ostream& os, Entity& entity) {
+    os<<entity.getHealthPoints()<<' '<<entity.getMaxHealthPoints()<< ' '<< entity.getName()<<'\n';
+    return os;
+}
 
 class Knight : public Entity {
 
@@ -249,6 +254,7 @@ int main() {
     Vampire player2("Vladimir", 10, 10);
 
     // test
+    std::cout<<player1;
     player2.printHealthBar();
     player2.takeDamage(player1.swordSlash());
     player2.bloodSacrifice();
