@@ -441,6 +441,8 @@ int main() {
             {playerTurn = 1;}
         //numTurn++;
 
+        delete player1;
+        delete player2;
 
     }
     return 0;
