@@ -1,3 +1,7 @@
+/*
+ * Bujor Stefan
+ * Proiect POO - Turn-Based RPG (nume temporar)
+*/
 #include<iostream>
 #include<random>
 #include<ctime>
@@ -326,6 +330,50 @@ public:
 
 };
 
+class Wizard : public Entity {
+    const int totalMana;
+    int mana;
+
+public:
+
+    Wizard(const std::string &name, int healthPoints, int maxHealthPoints, int mana, int totalMana)
+        : Entity(name, healthPoints, maxHealthPoints), totalMana(totalMana), mana(mana) {}
+
+    [[nodiscard]] int getMana() const {
+        return mana;
+    }
+
+    [[nodiscard]] int getTotalMana() const {
+        return totalMana;
+    }
+
+    void takeDamage(const Attack &attack) override {
+
+        int damageVal = attack.getDamage();
+
+        if (attack.getType() == damageType::Slashing ||
+            attack.getType() == damageType::Piercing   ) {
+            damageVal*=2;
+            std::cout << "It's super effective!\n";
+        }
+
+        if (attack.getType() == damageType::Holy ||
+            attack.getType() == damageType::Blood  ) {
+            damageVal/=2;
+            std::cout << "It's not very effective!\n";
+        }
+
+        if (damageVal <= 0) {
+            damageVal = 0;
+            std::cout<<"...but "<<getName()<<" isn't affected!\n";
+        }
+        else
+            std::cout<<getName()<<" has taken "<<damageVal<<" damage!\n";
+        loseHealth(damageVal);
+    }
+
+};
+
 int main() {
 
     int gameOver = 0;
@@ -424,10 +472,10 @@ int main() {
             if (auto* knight = dynamic_cast<Knight*>(player2)) {
 
                 switch (player2Choice) {
-                    case 1: player2->takeDamage(knight->swordSlash()); break;
-                    case 2: player2->takeDamage(knight->preparationLunge()); break;
+                    case 1: player1->takeDamage(knight->swordSlash()); break;
+                    case 2: player1->takeDamage(knight->preparationLunge()); break;
                     case 3: knight->holyVow(); break;
-                    case 4: player2->takeDamage(knight->opportunityStrike()); break;
+                    case 4: player1->takeDamage(knight->opportunityStrike()); break;
                     default: std::cout << knight->getName() << " stands firmly!\n"; break;
                 }
 
@@ -448,8 +496,7 @@ int main() {
         if (player1->getHealthPoints() <= 0) {
             std::cout<<player2->getName()<<" has won!\n";
             gameOver = 1;
-            delete player1;
-            delete player2;
+
         }
         else if (player2->getHealthPoints() <= 0) {
             std::cout<<player1->getName()<<" has won!\n";
@@ -462,8 +509,6 @@ int main() {
         else
             {playerTurn = 1;}
         //numTurn++;
-
-
 
     }
 
