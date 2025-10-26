@@ -347,6 +347,21 @@ public:
         return totalMana;
     }
 
+    void regenMana(int value) {
+        mana += value;
+    }
+
+    void printMana() const{
+        std::cout<<"Mana: "<<mana<<'/'<<totalMana;
+        for (int i = 0; i < getMana(); i++) {
+            std::cout<<'|';
+        }
+        for (int i = 0; i < getTotalMana() - getMana(); i++) {
+            std::cout<<'.';
+        }
+        std::cout<<'\n';
+    }
+
     void takeDamage(const Attack &attack) override {
 
         int damageVal = attack.getDamage();
@@ -372,6 +387,35 @@ public:
         loseHealth(damageVal);
     }
 
+    // ABILITIES ---------------------------------------------->
+
+    Attack magicMissile() {
+
+        //consume 1 mana and deal 2 damage
+        Attack attack(damageType::Magic, 2);
+
+        std::cout<<getName()<<" cast Magic Missle\n";
+
+        if (getMana() < 1) {
+            attack.increaseDamage(-2);
+            std::cout<<"...but is out of mana\n";
+        }
+
+        regenMana(-1);
+
+        return attack;
+    }
+
+    Attack bluntStaff() {
+        // deals 1 damage regardless of mana
+
+        Attack attack(damageType::Normal, 1);
+
+        return attack;
+    }
+
+    ~Wizard() override = default;
+
 };
 
 int main() {
@@ -387,7 +431,7 @@ int main() {
     Entity* player2 = new Vampire("Vladimir", 10, 10);
 
     int classChoice;
-    std::cout<<"Choose class: \n1. Knight \n2. Vampire\nYour choice: ";
+    std::cout<<"Choose class: \n1. Knight \n2. Vampire \n3. Wizard \nYour choice: ";
     std::cin>>classChoice;
     std::cout<<"\n";
 
@@ -397,6 +441,9 @@ int main() {
             break;
         case 2:
             player1 = new Vampire("Dracula", 10, 10);
+            break;
+        case 3:
+            player1 = new Wizard("Maegistus", 8, 8, 10, 10);
             break;
         default:
             gameOver = 1;
@@ -423,7 +470,13 @@ int main() {
 
         //std::cout<<playerTurn<<"\n";
         player1->printHealthBar();
+        if (auto* wizard = dynamic_cast<Wizard*>(player1)) {
+            wizard->printMana();
+        }
         player2->printHealthBar();
+        if (auto* wizard = dynamic_cast<Wizard*>(player2)) {
+            wizard->printMana();
+        }
 
         // player turn
         if (playerTurn == 0) {
@@ -432,8 +485,10 @@ int main() {
 
             if (dynamic_cast<Knight*>(player1)) {
                 std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
-            } else {
+            } else if (dynamic_cast<Vampire*>(player1)) {
                 std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
+            } else if (dynamic_cast<Wizard*>(player1)) {
+                std::cout << "1. Magic Missile\n2. Blunt Staff\n3. TODO\n4. TODO\n";
             }
 
             std::cout<<">> ";
@@ -459,6 +514,12 @@ int main() {
                     default: std::cout << vampire->getName() << " waits...\n"; break;
 
                 }
+            } else if (auto* wizard = dynamic_cast<Wizard*>(player1)) {
+                switch (playerChoice) {
+                    case 1: player2->takeDamage(wizard->magicMissile()); break;
+                    case 2: player2->takeDamage(wizard->bluntStaff()); break;
+                    default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
+                }
             }
 
 
@@ -470,7 +531,6 @@ int main() {
 
             // if knight
             if (auto* knight = dynamic_cast<Knight*>(player2)) {
-
                 switch (player2Choice) {
                     case 1: player1->takeDamage(knight->swordSlash()); break;
                     case 2: player1->takeDamage(knight->preparationLunge()); break;
@@ -478,7 +538,6 @@ int main() {
                     case 4: player1->takeDamage(knight->opportunityStrike()); break;
                     default: std::cout << knight->getName() << " stands firmly!\n"; break;
                 }
-
                 // if vampire
             } else if (auto* vampire = dynamic_cast<Vampire*>(player2)) {
                 switch (player2Choice) {
@@ -487,6 +546,13 @@ int main() {
                     case 3: player1->takeDamage(vampire->bloodTransfusion()); break;
                     case 4: vampire->bloodSacrifice(); break;
                     default: std::cout << vampire->getName() << " waits...\n"; break;
+                }
+                // if wizard
+            } else if (auto* wizard = dynamic_cast<Wizard*>(player2)) {
+                switch (player2Choice) {
+                    case 1: player1->takeDamage(wizard->magicMissile()); break;
+                    case 2: player1->takeDamage(wizard->bluntStaff()); break;
+                    default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
                 }
             }
 
