@@ -428,6 +428,8 @@ int main() {
         if (player1->getHealthPoints() <= 0) {
             std::cout<<player2->getName()<<" has won!\n";
             gameOver = 1;
+            delete player1;
+            delete player2;
         }
         else if (player2->getHealthPoints() <= 0) {
             std::cout<<player1->getName()<<" has won!\n";
@@ -441,9 +443,12 @@ int main() {
             {playerTurn = 1;}
         //numTurn++;
 
-        delete player1;
-        delete player2;
+
 
     }
+
+    delete player1;
+    delete player2;
+
     return 0;
 }
