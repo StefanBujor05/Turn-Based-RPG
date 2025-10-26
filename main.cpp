@@ -200,6 +200,23 @@ public:
 
     }
 
+    Attack opportunityStrike() {
+
+        // strikes the opponent dealing slashing damage
+        // if positioned properly, double the bonus damage
+
+        std::cout<<Knight::getName()<<" used opportunity attack!\n";
+        Attack attack(damageType::Slashing, 1);
+
+        if (getBonusDamage()) {
+            attack.increaseDamage(2*getBonusDamage());
+            resetBonusDamage();
+            std::cout<<"...and found an opportunity!\n";
+        }
+
+        return attack;
+    }
+
 
 
     ~Knight() override = default;
@@ -250,7 +267,8 @@ public:
         std::cout<<getName()<<" used Fang Bite!\n";
 
         if (getHealthPoints() < getMaxHealthPoints()/2) {
-            heal(2*healAmount);
+            healAmount = healAmount * 2;
+            heal(healAmount);
             std::cout<<getName()<<" healed for "<<healAmount<<" HP!\n";
             attack.increaseDamage(1);
             return attack;
@@ -365,7 +383,7 @@ int main() {
             std::cout<<"Choose and attack: \n";
 
             if (dynamic_cast<Knight*>(player1)) {
-                std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n";
+                std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
             } else {
                 std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
             }
@@ -379,10 +397,11 @@ int main() {
                     case 1: player2->takeDamage(knight->swordSlash()); break;
                     case 2: player2->takeDamage(knight->preparationLunge()); break;
                     case 3: knight->holyVow(); break;
+                    case 4: player2->takeDamage(knight->opportunityStrike()); break;
                     default: std::cout << knight->getName() << " stands firmly!\n"; break;
                 }
 
-            } else if (auto* vampire = dynamic_cast<Vampire*>(player2)) {
+            } else if (auto* vampire = dynamic_cast<Vampire*>(player1)) {
 
                 switch (playerChoice) {
                     case 1: player2->takeDamage(vampire->fangBite()); break;
@@ -408,15 +427,16 @@ int main() {
                     case 1: player2->takeDamage(knight->swordSlash()); break;
                     case 2: player2->takeDamage(knight->preparationLunge()); break;
                     case 3: knight->holyVow(); break;
+                    case 4: player2->takeDamage(knight->opportunityStrike()); break;
                     default: std::cout << knight->getName() << " stands firmly!\n"; break;
                 }
 
                 // if vampire
             } else if (auto* vampire = dynamic_cast<Vampire*>(player2)) {
                 switch (player2Choice) {
-                    case 1: player2->takeDamage(vampire->fangBite()); break;
-                    case 2: player2->takeDamage(vampire->bloodSplatter()); break;
-                    case 3: player2->takeDamage(vampire->bloodTransfusion()); break;
+                    case 1: player1->takeDamage(vampire->fangBite()); break;
+                    case 2: player1->takeDamage(vampire->bloodSplatter()); break;
+                    case 3: player1->takeDamage(vampire->bloodTransfusion()); break;
                     case 4: vampire->bloodSacrifice(); break;
                     default: std::cout << vampire->getName() << " waits...\n"; break;
                 }
