@@ -470,11 +470,11 @@ int main() {
 
         //std::cout<<playerTurn<<"\n";
         player1->printHealthBar();
-        if (auto* wizard = dynamic_cast<Wizard*>(player1)) {
+        if (auto* const wizard = dynamic_cast<Wizard*>(player1)) {
             wizard->printMana();
         }
         player2->printHealthBar();
-        if (auto* wizard = dynamic_cast<Wizard*>(player2)) {
+        if (auto* const wizard = dynamic_cast<Wizard*>(player2)) {
             wizard->printMana();
         }
 
