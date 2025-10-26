@@ -200,6 +200,8 @@ public:
 
     }
 
+
+
     ~Knight() override = default;
 };
 
@@ -319,7 +321,7 @@ int main() {
     Entity* player2 = new Vampire("Vladimir", 10, 10);
 
     int classChoice;
-    std::cout<<"Choose class: \n1. Knight \n2. Vampire\n Your choice: ";
+    std::cout<<"Choose class: \n1. Knight \n2. Vampire\nYour choice: ";
     std::cin>>classChoice;
     std::cout<<"\n";
 
@@ -402,7 +404,7 @@ int main() {
             // if knight
             if (auto* knight = dynamic_cast<Knight*>(player2)) {
 
-                switch (playerChoice) {
+                switch (player2Choice) {
                     case 1: player2->takeDamage(knight->swordSlash()); break;
                     case 2: player2->takeDamage(knight->preparationLunge()); break;
                     case 3: knight->holyVow(); break;
@@ -411,7 +413,7 @@ int main() {
 
                 // if vampire
             } else if (auto* vampire = dynamic_cast<Vampire*>(player2)) {
-                switch (playerChoice) {
+                switch (player2Choice) {
                     case 1: player2->takeDamage(vampire->fangBite()); break;
                     case 2: player2->takeDamage(vampire->bloodSplatter()); break;
                     case 3: player2->takeDamage(vampire->bloodTransfusion()); break;
