@@ -95,7 +95,9 @@ public:
 
     friend std::ostream& operator<<(std::ostream &os, const Entity &e);
 
-    ~Entity()= default;
+    virtual void takeDamage(const Attack& attack) = 0;
+
+    virtual ~Entity()= default;
 };
 
 std::ostream& operator<<(std::ostream& os, const Entity& entity) {
@@ -126,7 +128,7 @@ public:
     }
 
 
-    void takeDamage(const Attack& attack) {
+    void takeDamage(const Attack& attack) override{
         int damageVal = attack.getDamage(); // initial dmg value
 
         if (attack.getType() == damageType::Normal    ||
@@ -198,7 +200,7 @@ public:
 
     }
 
-    ~Knight()= default;
+    ~Knight() override = default;
 };
 
 
@@ -209,7 +211,7 @@ public:
     Vampire (const std::string &name, int healthPoints, int maxHealthPoints)
             : Entity(name, healthPoints, maxHealthPoints) {}
 
-    void takeDamage(const Attack& attack) {
+    void takeDamage(const Attack& attack) override{
         int damageVal = attack.getDamage(); // initial dmg value
 
         // typing
@@ -300,7 +302,7 @@ public:
 
     }
 
-    ~Vampire()= default;
+    ~Vampire() override = default;
 
 };
 
@@ -313,8 +315,28 @@ int main() {
     int playerChoice;
     int player2Choice;
 
-    Knight player1("Arthur", 10, 10);
-    Vampire player2("Vladimir", 10, 10);
+    Entity* player1 = nullptr;
+    Entity* player2 = new Vampire("Vladimir", 10, 10);
+
+    int classChoice;
+    std::cout<<"Choose class: \n1. Knight \n2. Vampire\n Your choice: ";
+    std::cin>>classChoice;
+    std::cout<<"\n";
+
+    switch(classChoice) {
+        case 1:
+            player1 = new Knight("Arthur", 10, 10);
+            break;
+        case 2:
+            player1 = new Vampire("Dracula", 10, 10);
+            break;
+        default:
+            gameOver = 1;
+            std::cout<<"You chose not to fight!\n";
+            break;
+    }
+
+
 
     // test
     // std::cout<<player1;
@@ -332,66 +354,81 @@ int main() {
     while (!gameOver) {
 
         //std::cout<<playerTurn<<"\n";
-        player1.printHealthBar();
-        player2.printHealthBar();
+        player1->printHealthBar();
+        player2->printHealthBar();
 
         // player turn
         if (playerTurn == 0) {
 
             std::cout<<"Choose and attack: \n";
-            std::cout<<"1. Sword Slash \n2. Preparation Lunge \n3. Holy Vow \n4. TODO\n";
-            std::cout<<"Your choice:  ";
+
+            if (dynamic_cast<Knight*>(player1)) {
+                std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n";
+            } else {
+                std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
+            }
+
+            std::cout<<">> ";
             std::cin>>playerChoice;
 
-            switch (playerChoice) {
-                case 1:
-                    player2.takeDamage(player1.swordSlash());
-                    break;
-                case 2:
-                    player2.takeDamage(player1.preparationLunge());
-                    break;
-                case 3:
-                    player1.holyVow();
-                    break;
-                default:
-                    std::cout<<player1.getName()<<" stands firmly!\n";
-                    break;
+            if (auto* knight = dynamic_cast<Knight*>(player1)) {
 
+                switch (playerChoice) {
+                    case 1: player2->takeDamage(knight->swordSlash()); break;
+                    case 2: player2->takeDamage(knight->preparationLunge()); break;
+                    case 3: knight->holyVow(); break;
+                    default: std::cout << knight->getName() << " stands firmly!\n"; break;
+                }
+
+            } else if (auto* vampire = dynamic_cast<Vampire*>(player2)) {
+
+                switch (playerChoice) {
+                    case 1: player2->takeDamage(vampire->fangBite()); break;
+                    case 2: player2->takeDamage(vampire->bloodSplatter()); break;
+                    case 3: player2->takeDamage(vampire->bloodTransfusion()); break;
+                    case 4: vampire->bloodSacrifice(); break;
+                    default: std::cout << vampire->getName() << " waits...\n"; break;
+
+                }
             }
+
+
         }
         // enemy turn
         else {
             srand((unsigned) time(&t));
             player2Choice = rand()%4 + 1;
 
-            switch (player2Choice) {
-                case 1:
-                    player1.takeDamage(player2.fangBite());
-                    break;
-                case 2:
-                    player1.takeDamage(player2.bloodSplatter());
-                    break;
-                case 3:
-                    player1.takeDamage(player2.bloodTransfusion());
-                    break;
-                case 4:
-                    player2.bloodSacrifice();
-                    break;
-                default:
-                    std::cout<<player2.getName()<<" waits menacingly...\n";
-                    break;
+            // if knight
+            if (auto* knight = dynamic_cast<Knight*>(player2)) {
 
+                switch (playerChoice) {
+                    case 1: player2->takeDamage(knight->swordSlash()); break;
+                    case 2: player2->takeDamage(knight->preparationLunge()); break;
+                    case 3: knight->holyVow(); break;
+                    default: std::cout << knight->getName() << " stands firmly!\n"; break;
+                }
+
+                // if vampire
+            } else if (auto* vampire = dynamic_cast<Vampire*>(player2)) {
+                switch (playerChoice) {
+                    case 1: player2->takeDamage(vampire->fangBite()); break;
+                    case 2: player2->takeDamage(vampire->bloodSplatter()); break;
+                    case 3: player2->takeDamage(vampire->bloodTransfusion()); break;
+                    case 4: vampire->bloodSacrifice(); break;
+                    default: std::cout << vampire->getName() << " waits...\n"; break;
+                }
             }
 
         }
 
         // end conditions
-        if (player1.getHealthPoints() <= 0) {
-            std::cout<<player2.getName()<<" has won!\n";
+        if (player1->getHealthPoints() <= 0) {
+            std::cout<<player2->getName()<<" has won!\n";
             gameOver = 1;
         }
-        else if (player2.getHealthPoints() <= 0) {
-            std::cout<<player1.getName()<<" has won!\n";
+        else if (player2->getHealthPoints() <= 0) {
+            std::cout<<player1->getName()<<" has won!\n";
             gameOver = 1;
         }
 
