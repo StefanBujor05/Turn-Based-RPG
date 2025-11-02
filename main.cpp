@@ -46,6 +46,7 @@ public:
             damage = obj.getDamage();
         }
 
+        return *this;
     }
 };
 
