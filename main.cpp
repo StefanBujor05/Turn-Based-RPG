@@ -334,35 +334,51 @@ public:
 
 };
 
-class Wizard : public Entity {
+class Mana {
+
+    int currentMana;
     const int totalMana;
-    int mana;
 
 public:
 
-    Wizard(const std::string &name, int healthPoints, int maxHealthPoints, int mana, int totalMana)
-        : Entity(name, healthPoints, maxHealthPoints), totalMana(totalMana), mana(mana) {}
-
-    [[nodiscard]] int getMana() const {
-        return mana;
+    [[nodiscard]]int getMana() {
+        return currentMana;
     }
 
-    [[nodiscard]] int getTotalMana() const {
+    [[nodiscard]]int getTotalMana() {
         return totalMana;
     }
 
     void regenMana(int value) {
-        mana += value;
-        if (mana > totalMana) mana = totalMana;
-        if (mana < 0) mana = 0;
+        currentMana += value;
+        if (currentMana > totalMana) currentMana = totalMana;
+        if (currentMana < 0) currentMana = 0;
     }
 
-    void printMana() const{
-        std::cout<<"Mana: "<<mana<<'/'<<totalMana;
-        for (int i = 0; i < getMana(); i++) {
+
+
+    Mana(int mana, int totalMana) : currentMana(mana), totalMana(totalMana) {}
+};
+
+
+
+
+class Wizard : public Entity {
+
+    Mana manaStatus = {10, 10};
+
+public:
+
+    Wizard(const std::string &name, int healthPoints, int maxHealthPoints)
+        : Entity(name, healthPoints, maxHealthPoints){}
+
+
+    void printMana() {
+        std::cout<<"Mana: "<<manaStatus.getMana()<<'/'<<manaStatus.getTotalMana();
+        for (int i = 0; i < manaStatus.getMana(); i++) {
             std::cout<<'|';
         }
-        for (int i = 0; i < getTotalMana() - getMana(); i++) {
+        for (int i = 0; i < manaStatus.getTotalMana() - manaStatus.getMana(); i++) {
             std::cout<<'.';
         }
         std::cout<<'\n';
@@ -385,7 +401,7 @@ public:
         }
 
         if (damageVal <= 0) {
-            damageVal = 0;
+            //damageVal = 0;
             std::cout<<"...but "<<getName()<<" isn't affected!\n";
         }
         else {
@@ -403,11 +419,11 @@ public:
 
         std::cout<<getName()<<" cast Magic Missle\n";
 
-        if (getMana() < 1) {
+        if (manaStatus.getMana() < 1) {
             attack.increaseDamage(-2);
             std::cout<<"...but is out of mana\n";
         } else {
-            regenMana(-1);
+            manaStatus.regenMana(-1);
         }
 
         return attack;
@@ -435,11 +451,11 @@ private:
     void displayStats() const {
         std::cout << "\n--- Current Battle Status ---\n";
         player1->printHealthBar();
-        if (const auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
+        if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             wizard->printMana();
         }
         player2->printHealthBar();
-        if (const auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
+        if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
             wizard->printMana();
         }
         std::cout << "-----------------------------\n";
@@ -543,13 +559,15 @@ private:
                 player1 = std::make_unique<Vampire>("Dracula", 10, 10);
                 break;
             case 3:
-                player1 = std::make_unique<Wizard>("Maegistus", 8, 8, 10, 10);
+                player1 = std::make_unique<Wizard>("Maegistus", 8, 8);
                 break;
             default:
                 std::cout<<"Invalid choice. Exiting game.\n";
                 player1 = nullptr;
                 return;
         }
+
+        std::cout<<"You are playing as "<<player1->getName()<<"\n";
 
         player2 = std::make_unique<Vampire>("Vladimir", 10, 10);
     }
