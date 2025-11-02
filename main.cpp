@@ -35,6 +35,18 @@ public:
 
 
     ~Attack()= default;
+    Attack(const Attack &obj) {
+        type = obj.getType();
+        damage = obj.getDamage();
+    }
+
+    Attack& operator= (const Attack& obj) {
+        if (this != &obj) {
+            type = obj.getType();
+            damage = obj.getDamage();
+        }
+
+    }
 };
 
 
@@ -102,6 +114,8 @@ public:
     virtual void takeDamage(const Attack& attack) = 0;
 
     virtual ~Entity()= default;
+
+
 };
 
 std::ostream& operator<<(std::ostream& os, const Entity& entity) {
