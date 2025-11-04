@@ -19,6 +19,7 @@ void clear_screen() {
 }
 
 
+
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 
 
