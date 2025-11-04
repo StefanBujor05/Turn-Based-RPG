@@ -13,6 +13,9 @@ Each class has unique attacks as well as passive abilities and effects.
 
 Uses simple terminal controls. 
 
+In the about section, you can find a list of recommended albums to use as a soundtrack
+for the game, consisting of mainly death/black metal. 
+
 ### TODO:
 - Finish wizard abilities and passives.
 - Add 4th class.

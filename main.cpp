@@ -20,8 +20,16 @@
 
 
 
-enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
+enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy, Fire, Lightning};
 
+void artificialDelay() {
+    int timeWait = 500;
+    for (int i = 0; i < 3; i++) {
+        _sleep(timeWait);
+        std::cout << '.';
+    }
+    _sleep(300);
+}
 
 class Attack {
     damageType type;
@@ -106,7 +114,8 @@ public:
 
 
     void printHealthBar() const {
-        std::cout<<getName()<<": "<<healthPoints<<"/"<<maxHealthPoints<<' ';
+        std::cout<<getName()<<": \n";
+        std::cout<<"Health Points: "<<healthPoints<<"/"<<maxHealthPoints<<' ';
         for (int i = 0; i < healthPoints; i++) {
             std::cout<<"|";
         }
@@ -183,7 +192,9 @@ public:
             damageVal/=2;
         }
         else
-            if (attack.getType() == damageType::Magic) {
+            if (attack.getType() == damageType::Magic ||
+                attack.getType() == damageType::Fire  ||
+                attack.getType() == damageType::Lightning) {
                 damageVal*=2;
                 std::cout << "It's super effective!\n";
             }
@@ -403,12 +414,44 @@ public:
     Mana(int mana, int totalMana) : currentMana(mana), totalMana(totalMana) {}
 };
 
+class AcademicMagic {
 
+    int progress = 0;
+    const int threshHold = 5;
+    bool active = false;
+
+    public:
+
+    AcademicMagic(int progress, bool active): progress(progress), active(active){}
+
+    [[nodiscard]]int getProgress() const {
+        return progress;
+    }
+
+    [[nodiscard]]bool getActive() const {
+        return active;
+    }
+
+    [[nodiscard]]int getThreshHold() const {
+        return threshHold;
+    }
+
+    void increaseProgress(int valueAmount) {
+        progress += valueAmount;
+        if (progress > threshHold)
+            progress = threshHold;
+    }
+
+    void activate() {
+        active = true;
+    }
+};
 
 
 class Wizard : public Entity {
 
     Mana manaStatus = {10, 10};
+    AcademicMagic ascension = {0, false};
 
 public:
 
@@ -417,7 +460,7 @@ public:
 
 
     void printMana() {
-        std::cout<<"    Mana: "<<manaStatus.getMana()<<'/'<<manaStatus.getTotalMana();
+        std::cout<<"         Mana: "<<manaStatus.getMana()<<'/'<<manaStatus.getTotalMana();
         for (int i = 0; i < manaStatus.getMana(); i++) {
             std::cout<<'|';
         }
@@ -425,6 +468,24 @@ public:
             std::cout<<'.';
         }
         std::cout<<'\n';
+    }
+
+    void printAscensionStatus() {
+        std::cout<<"    Ascension: "<<ascension.getProgress()<<'/'<<ascension.getThreshHold()<<' ';
+        for (int i = 0; i < ascension.getProgress(); i++) {
+            std::cout<<'|';
+        }
+        for (int i = 0; i < ascension.getThreshHold() - ascension.getProgress(); i++) {
+            std::cout<<'.';
+        }
+        std::cout<<'\n';
+    }
+
+    void checkAscension() {
+        if (ascension.getProgress() == ascension.getThreshHold()) {
+            ascension.activate();
+            std::cout<<getName()<<" has ascended!\n";
+        }
     }
 
     void takeDamage(const Attack &attack) override {
@@ -468,9 +529,11 @@ public:
 
         if (manaStatus.getMana() < 1) {
             attack.increaseDamage(-2);
+            attack.nullifiyAttack();
             std::cout<<"...but is out of mana\n";
         } else {
             manaStatus.regenMana(-1);
+            ascension.increaseProgress(1);
         }
 
         return attack;
@@ -545,6 +608,7 @@ class TurnBasedRPG {
         player1->printHealthBar();
         if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             wizard->printMana();
+            wizard->printAscensionStatus();
         }
 
         std::cout<<"\n";
@@ -552,6 +616,7 @@ class TurnBasedRPG {
         player2->printHealthBar();
         if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
             wizard->printMana();
+            wizard->printAscensionStatus();
         }
         std::cout << "-----------------------------\n";
     }
@@ -593,6 +658,8 @@ class TurnBasedRPG {
                 case 2: player2->takeDamage(wizard->bluntStaff()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
+            wizard->checkAscension();
+
         }
     }
 
@@ -625,6 +692,7 @@ class TurnBasedRPG {
                 case 2: player1->takeDamage(wizard->bluntStaff()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
+            wizard->checkAscension();
         }
     }
 
@@ -644,7 +712,8 @@ class TurnBasedRPG {
         int classChoice;
         std::string playerName;
 
-        std::cout<<"...\n Who are you? \n>>";
+        artificialDelay();
+        std::cout<<"Who are you? \n>>";
         std::cin>>playerName;
         //std::cout<<"\n";
         std::cout<<"And what is your class?: \n1. Knight \n2. Vampire \n3. Wizard \n>> ";
@@ -689,6 +758,7 @@ public:
             if (playerTurn == 0) {
                 playerAction();
             } else {
+                artificialDelay();
                 enemyAction();
             }
 
@@ -730,11 +800,6 @@ int main() {
         default: std::cout<<"Invalid choice. Exiting game.\n";
                 exit(0);
     }
-
-
-
-
-
 
     return 0;
 }
