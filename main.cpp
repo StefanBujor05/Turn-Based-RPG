@@ -220,9 +220,9 @@ public:
             attack.increaseDamage(1);
 
 
-        if (getBonusDamage()) {
-            attack.increaseDamage(getBonusDamage());
-            resetBonusDamage();
+        if (bonusDamage) {
+            attack.increaseDamage(bonusDamage);
+            bonusDamage = 0;
 
         }
 
