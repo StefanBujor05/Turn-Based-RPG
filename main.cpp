@@ -356,11 +356,11 @@ class Mana {
 
 public:
 
-    [[nodiscard]]int getMana() {
+    [[nodiscard]]int getMana() const{
         return currentMana;
     }
 
-    [[nodiscard]]int getTotalMana() {
+    [[nodiscard]]int getTotalMana() const{
         return totalMana;
     }
 

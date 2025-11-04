@@ -1,11 +1,27 @@
 # Turn-Based RPG
 
-Turn based battles between different classes with distinct abilities.
+You find yourself having to battle an opponent to the death.
+
+Pick 1 out of the abilities available and fight your opponent.
+
+Current options are:
+- Knight
+- Wizard
+- Vampire
+
+Each class has unique attacks as well as passive abilities and effects.
+
+Uses simple terminal controls. 
+
+TODO:
+- Finish wizard abilities and passives.
+- Add 4th class.
+- Fix bug when ability is unusable, but still affects the opponent.
 
 ### Tema 0
 
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
+- [X] Nume proiect (poate fi schimbat ulterior)
+- [X] Scurtă descriere a temei alese, ce v-ați propus să implementați
 
 ## Tema 1
 
