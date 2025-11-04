@@ -2,7 +2,7 @@
 
 You find yourself having to battle an opponent to the death.
 
-Pick 1 out of the abilities available and fight your opponent.
+Pick 1 out of the classes available and fight your opponent.
 
 Current options are:
 - Knight
@@ -13,7 +13,7 @@ Each class has unique attacks as well as passive abilities and effects.
 
 Uses simple terminal controls. 
 
-TODO:
+### TODO:
 - Finish wizard abilities and passives.
 - Add 4th class.
 - Fix bug when ability is unusable, but still affects the opponent.
