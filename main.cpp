@@ -20,8 +20,12 @@
 // }
 
 
-
+// tpyings for later classes
+//---------------->
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy, Fire, Lightning};
+
+enum class statusEffectType{None, Electrified, Bleeding, Poisoned};
+//---------------->
 
 void artificialDelay() {
     std::chrono::milliseconds delay_duration(500);
@@ -32,17 +36,56 @@ void artificialDelay() {
     std::this_thread::sleep_for(delay_duration);
 }
 
+class StatusEffect {
+
+    statusEffectType effectType;
+    int damage;
+    mutable int duration;
+
+public:
+
+    StatusEffect(statusEffectType effectType, int damage, int duration)
+        : effectType(effectType), damage(damage), duration(duration) {}
+
+    [[nodiscard]]statusEffectType getEffectType() {
+        return effectType;
+    }
+
+    [[nodiscard]]int getEffectDamage() {
+        return damage;
+    }
+    [[nodiscard]]int getEffectDuration() {
+        return duration;
+    }
+
+    // void incrementEffectDamage(int amount) {
+    //     damage += amount;
+    // }
+
+    void decrementEffectDuration() const{
+        duration = duration - 1;
+    }
+
+
+};
+
 class Attack {
     damageType type;
+    mutable StatusEffect effect = {statusEffectType::None, 0, 0};
     int damage = 0;
     bool active = true;
 
 public:
 
+    //Attack (damageType type, int damage) : type(type), damage(damage){}
     Attack (damageType type, int damage) : type(type), damage(damage) {}
 
     void increaseDamage(const int amount) {
         damage += amount;
+    }
+
+    void setEffect(StatusEffect effect) {
+        this->effect = effect;
     }
 
     void nullifiyAttack() {
@@ -63,6 +106,13 @@ public:
         return type;
     }
 
+    [[nodiscard]]StatusEffect getStatusEffect() const {
+        return effect;
+    }
+
+    void decrementEffectDuration() const{
+        effect.decrementEffectDuration();
+    }
 
     ~Attack() = default;
     Attack(const Attack &obj) {
@@ -86,6 +136,7 @@ class Entity {
     const std::string name;
     int healthPoints;
     int maxHealthPoints;
+    StatusEffect status = {statusEffectType::None, 0, 0};
 
 
 public:
@@ -101,6 +152,18 @@ public:
         return name;
     }
 
+    void takeEffectDamage() {
+        if (status.getEffectType() != statusEffectType::None && status.getEffectDuration() > 0) {
+            loseHealth(status.getEffectDamage());
+            status.decrementEffectDuration();
+
+            std::cout <<name<<" took "<<status.getEffectDamage()<<" damage"<<"\n";
+        }
+    }
+
+    void setEffect(StatusEffect effect) {
+        status = effect;
+    }
 
     void increaseMaxHealthPoints(const int amount) {
         maxHealthPoints += amount;
@@ -180,6 +243,7 @@ public:
 
     void takeDamage(const Attack& attack) override{
         int damageVal = attack.getDamage(); // initial dmg value
+        StatusEffect effect = attack.getStatusEffect();
 
         if (attack.isActive() == false) {
             return;
@@ -199,6 +263,10 @@ public:
                 damageVal*=2;
                 std::cout << "It's super effective!\n";
             }
+
+        if (effect.getEffectType() != statusEffectType::None) {
+            setEffect(effect);
+        }
 
         if (damageVal == 0) {
             std::cout<<"...but "<<getName()<<" isn't phased\n";
@@ -288,6 +356,7 @@ public:
 
     void takeDamage(const Attack& attack) override{
         int damageVal = attack.getDamage(); // initial dmg value
+        StatusEffect effect = attack.getStatusEffect();
 
         if (attack.isActive() == false) {
             return;
@@ -306,6 +375,10 @@ public:
                 damageVal*=2;
                 std::cout << "It's super effective!\n";
             }
+
+        if (effect.getEffectType() != statusEffectType::None) {
+            setEffect(effect);
+        }
 
         if (damageVal == 0) {
             std::cout<<"...but "<<getName()<<" ignored it\n";
@@ -343,12 +416,17 @@ public:
         // if bellow half hp the blood infects the opponent,
         // dealing extra damage
         Attack attack(damageType::Blood, 1);
+
         int infectedDamage = 0;
 
         std::cout<<getName()<<" used Blood Splatter!\n";
 
         if (getHealthPoints() < getMaxHealthPoints()/2) {
-            infectedDamage = 1;
+            //infectedDamage = 1;
+
+            StatusEffect effect = {statusEffectType::Poisoned, 1, 2};
+            attack.setEffect(effect);
+
             std::cout<<"...and it infects the enemy!\n";
         }
 
@@ -492,6 +570,7 @@ public:
     void takeDamage(const Attack &attack) override {
 
         int damageVal = attack.getDamage();
+        StatusEffect effect = attack.getStatusEffect();
 
         if (attack.isActive() == false) {
             return;
@@ -507,6 +586,10 @@ public:
             attack.getType() == damageType::Blood  ) {
             damageVal/=2;
             std::cout << "It's not very effective!\n";
+        }
+
+        if (effect.getEffectType() != statusEffectType::None) {
+            setEffect(effect);
         }
 
         if (damageVal <= 0) {
@@ -544,6 +627,33 @@ public:
         // deals 1 damage regardless of mana
         std::cout<<getName()<<" used Blunt Staff\n";
         Attack attack(damageType::Normal, 1);
+        return attack;
+    }
+
+    Attack lightningBolt() {
+
+        Attack attack(damageType::Lightning, 2);
+        StatusEffect effect = {statusEffectType::Electrified, 1, 2};
+        attack.setEffect(effect);
+
+        // if mana == 0, exit
+        if (manaStatus.getMana() < 2) {
+            attack.nullifiyAttack();
+            std::cout<<getName()<<" tried to cast Lightning Bolt!\n";
+            std::cout<<"...but is out of mana\n";
+            return attack;
+        }
+
+        manaStatus.regenMana(-2);
+        ascension.increaseProgress(2);
+
+        if (ascension.getActive() == true) {
+            attack.increaseDamage(2);
+            std::cout<<getName()<<" used Ascended Lightning Bolt!\n";
+            return attack;
+        }
+
+        std::cout<<getName()<<" used Lightning Bolt!\n";
         return attack;
     }
 
@@ -624,18 +734,24 @@ class TurnBasedRPG {
 
     void playerAction() {
         int playerChoice;
+
+
         std::cout<<"Choose an attack "<< player1->getName()<<": \n";
+
+
 
         if (dynamic_cast<Knight*>(player1.get())) {
             std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
         } else if (dynamic_cast<Vampire*>(player1.get())) {
             std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
         } else if (dynamic_cast<Wizard*>(player1.get())) {
-            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. TODO (Placeholder)\n4. TODO (Placeholder)\n";
+            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. TODO (Placeholder)\n";
         }
 
         std::cout<<">> ";
         std::cin>>playerChoice;
+
+
 
         if (auto* knight = dynamic_cast<Knight*>(player1.get())) {
             switch (playerChoice) {
@@ -657,11 +773,13 @@ class TurnBasedRPG {
             switch (playerChoice) {
                 case 1: player2->takeDamage(wizard->magicMissile()); break;
                 case 2: player2->takeDamage(wizard->bluntStaff()); break;
+                case 3: player2->takeDamage(wizard->lightningBolt()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
             wizard->checkAscension();
 
         }
+        player1->takeEffectDamage();
     }
 
     void enemyAction() {
@@ -691,10 +809,12 @@ class TurnBasedRPG {
             switch (player2Choice) {
                 case 1: player1->takeDamage(wizard->magicMissile()); break;
                 case 2: player1->takeDamage(wizard->bluntStaff()); break;
+                case 3: player1->takeDamage(wizard->lightningBolt()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
             wizard->checkAscension();
         }
+        player2->takeEffectDamage();
     }
 
     bool checkGameOver() const {
@@ -739,7 +859,7 @@ class TurnBasedRPG {
 
         std::cout<<"You are playing as "<<player1->getName()<<"\n";
 
-        player2 = std::make_unique<Vampire>("Vladimir", 10, 10);
+        player2 = std::make_unique<Wizard>("Maegistus", 8, 8);
     }
 
 public:
