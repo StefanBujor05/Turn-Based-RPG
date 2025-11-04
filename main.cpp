@@ -720,11 +720,15 @@ int main() {
         case 2:
             welcomeScreen.printAbout();
             std::cin>>menuChoice;
+            [[fallthrough]];
 
-        case 1: game.runGame(); break;
+        case 1: game.runGame();
+                break;
 
-        case 3: std::cout<<"Goodbye! "; exit(0);
-        default: std::cout<<"Invalid choice. Exiting game.\n"; exit(0);
+        case 3: std::cout<<"Goodbye! ";
+                exit(0);
+        default: std::cout<<"Invalid choice. Exiting game.\n";
+                exit(0);
     }
 
 
