@@ -7,6 +7,7 @@
 #include<ctime>
 #include <memory>
 #include<cstdlib>
+#include<thread>
 
 // void clear_screen() {
 // #ifdef _WIN32
@@ -23,12 +24,12 @@
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy, Fire, Lightning};
 
 void artificialDelay() {
-    int timeWait = 500;
+    std::chrono::milliseconds delay_duration(500);
     for (int i = 0; i < 3; i++) {
-        _sleep(timeWait);
+        std::this_thread::sleep_for(delay_duration);
         std::cout << '.';
     }
-    _sleep(300);
+    std::this_thread::sleep_for(delay_duration);
 }
 
 class Attack {
