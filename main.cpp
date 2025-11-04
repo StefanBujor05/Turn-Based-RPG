@@ -8,15 +8,15 @@
 #include <memory>
 #include<cstdlib>
 
-void clear_screen() {
-#ifdef _WIN32
-    // For Windows (Cmd, PowerShell)
-    system("cls");
-#else
-    // For Linux, macOS, and most Unix-like systems (Bash, Zsh)
-    system("clear");
-#endif
-}
+// void clear_screen() {
+// #ifdef _WIN32
+//     // For Windows (Cmd, PowerShell)
+//     system("cls");
+// #else
+//     // For Linux, macOS, and most Unix-like systems (Bash, Zsh)
+//     system("clear");
+// #endif
+// }
 
 
 
