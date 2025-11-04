@@ -6,6 +6,17 @@
 #include<random>
 #include<ctime>
 #include <memory>
+#include<cstdlib>
+
+void clear_screen() {
+#ifdef _WIN32
+    // For Windows (Cmd, PowerShell)
+    system("cls");
+#else
+    // For Linux, macOS, and most Unix-like systems (Bash, Zsh)
+    system("clear");
+#endif
+}
 
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 
@@ -13,6 +24,7 @@ enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy};
 class Attack {
     damageType type;
     int damage = 0;
+    bool active = true;
 
 public:
 
@@ -22,8 +34,15 @@ public:
         damage += amount;
     }
 
+    void nullifiyAttack() {
+        active = false;
+    }
 
     // GETTERS <------------------------------->
+
+    [[nodiscard]]bool isActive() const {
+        return active;
+    }
 
     [[nodiscard]]int getDamage() const{
         return damage;
@@ -34,7 +53,7 @@ public:
     }
 
 
-    ~Attack()= default;
+    ~Attack() = default;
     Attack(const Attack &obj) {
         type = obj.getType();
         damage = obj.getDamage();
@@ -150,6 +169,10 @@ public:
     void takeDamage(const Attack& attack) override{
         int damageVal = attack.getDamage(); // initial dmg value
 
+        if (attack.isActive() == false) {
+            return;
+        }
+
         if (attack.getType() == damageType::Normal    ||
             attack.getType() == damageType::Slashing  ||
             attack.getType() == damageType::Piercing) {
@@ -252,6 +275,10 @@ public:
     void takeDamage(const Attack& attack) override{
         int damageVal = attack.getDamage(); // initial dmg value
 
+        if (attack.isActive() == false) {
+            return;
+        }
+
         // typing
         if (attack.getType() == damageType::Blood ||
             attack.getType() == damageType::Magic){
@@ -339,7 +366,8 @@ public:
             return attack;
         }
 
-        attack.increaseDamage(-4);
+        //attack.increaseDamage(-4);
+        attack.nullifiyAttack();
         std::cout<<getName()<<" attempted a blood transfusion...\n...but is not yet strong enough\n";
         return attack;
 
@@ -370,8 +398,6 @@ public:
         if (currentMana < 0) currentMana = 0;
     }
 
-
-
     Mana(int mana, int totalMana) : currentMana(mana), totalMana(totalMana) {}
 };
 
@@ -389,7 +415,7 @@ public:
 
 
     void printMana() {
-        std::cout<<"Mana: "<<manaStatus.getMana()<<'/'<<manaStatus.getTotalMana();
+        std::cout<<"    Mana: "<<manaStatus.getMana()<<'/'<<manaStatus.getTotalMana();
         for (int i = 0; i < manaStatus.getMana(); i++) {
             std::cout<<'|';
         }
@@ -402,6 +428,10 @@ public:
     void takeDamage(const Attack &attack) override {
 
         int damageVal = attack.getDamage();
+
+        if (attack.isActive() == false) {
+            return;
+        }
 
         if (attack.getType() == damageType::Slashing ||
             attack.getType() == damageType::Piercing   ) {
@@ -456,8 +486,53 @@ public:
 };
 
 
+class TitleScreen {
+
+
+public:
+
+    void printASCII() const{
+        std::cout<<"      [\n";
+        std::cout<<"<>xxxx[{::::::::::::::::::::::::> \n";
+        std::cout<<"      [ \n";
+
+        std::cout<<"           GAME TITLE\n";
+
+        std::cout<<"                         [\n";
+        std::cout<<"<::::::::::::::::::::::::[{xxxx<>\n";
+        std::cout<<"                         [\n";
+    }
+
+    void printMenu() const{
+        std::cout<<"\n";
+        std::cout<<"[1] Start Game\n";
+        std::cout<<"[2] About\n";
+        std::cout<<"[3] Exit\n";
+        std::cout<<">>";
+    }
+
+    void printAbout() const {
+        std::cout<<"\n";
+        std::cout<<"<------------- About ------------->\n\n";
+        std::cout<<"Made by: Bujor Stefan\n"
+                   "University of Bucharest \n"
+                   "Computer Engineering \n\n";
+
+        std::cout<<"Albums to listen to whilst playing: \n"
+                   "-> Morbid Angel - Blessed are the Sick \n"
+                   "-> Obituary - Cause of Death \n"
+                   "-> Amon Amarth - Twilight of the Thunder Gods (for Viking class) \n"
+                   "-> Morbid Angel - Formulas Fatal to the Flesh \n"
+                   "-> Bolt Thrower - Those Once Loyal \n"
+                   "-> Entombed - Left Hand Path \n"
+                   "-> Bathory - Blood Fire Death \n\n";
+        std::cout<<"[1] Back \n";
+        std::cout<<">>";
+    }
+
+};
+
 class TurnBasedRPG {
-private:
 
     std::unique_ptr<Entity> player1;
     std::unique_ptr<Entity> player2;
@@ -469,6 +544,9 @@ private:
         if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             wizard->printMana();
         }
+
+        std::cout<<"\n";
+
         player2->printHealthBar();
         if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
             wizard->printMana();
@@ -478,7 +556,7 @@ private:
 
     void playerAction() {
         int playerChoice;
-        std::cout<<"Choose an attack for "<< player1->getName()<<": \n";
+        std::cout<<"Choose an attack "<< player1->getName()<<": \n";
 
         if (dynamic_cast<Knight*>(player1.get())) {
             std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
@@ -562,19 +640,24 @@ private:
 
     void setupGame() {
         int classChoice;
-        std::cout<<"Choose class for Player 1: \n1. Knight \n2. Vampire \n3. Wizard \nYour choice: ";
+        std::string playerName;
+
+        std::cout<<"...\n Who are you? \n>>";
+        std::cin>>playerName;
+        //std::cout<<"\n";
+        std::cout<<"And what is your class?: \n1. Knight \n2. Vampire \n3. Wizard \n>> ";
         std::cin>>classChoice;
         std::cout<<"\n";
 
         switch(classChoice) {
             case 1:
-                player1 = std::make_unique<Knight>("Arthur", 10, 10);
+                player1 = std::make_unique<Knight>(playerName, 10, 10);
                 break;
             case 2:
-                player1 = std::make_unique<Vampire>("Dracula", 10, 10);
+                player1 = std::make_unique<Vampire>(playerName, 10, 10);
                 break;
             case 3:
-                player1 = std::make_unique<Wizard>("Maegistus", 8, 8);
+                player1 = std::make_unique<Wizard>(playerName, 8, 8);
                 break;
             default:
                 std::cout<<"Invalid choice. Exiting game.\n";
@@ -612,6 +695,7 @@ public:
             std::cout<<"\n-------------------------------------\n";
 
             playerTurn = 1 - playerTurn;
+
         }
 
     }
@@ -620,8 +704,31 @@ public:
 
 
 int main() {
+
+    TitleScreen welcomeScreen;
     TurnBasedRPG game;
-    game.runGame();
+    int menuChoice;
+
+    welcomeScreen.printASCII();
+    welcomeScreen.printMenu();
+
+    std::cin>>menuChoice;
+
+    switch (menuChoice) {
+        case 2:
+            welcomeScreen.printAbout();
+            std::cin>>menuChoice;
+
+        case 1: game.runGame(); break;
+
+        case 3: std::cout<<"Goodbye! "; exit(0);
+        default: std::cout<<"Invalid choice. Exiting game.\n"; exit(0);
+    }
+
+
+
+
+
 
     return 0;
 }
