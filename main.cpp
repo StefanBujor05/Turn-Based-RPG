@@ -84,8 +84,8 @@ public:
         damage += amount;
     }
 
-    void setEffect(StatusEffect effect) {
-        this->effect = effect;
+    void setEffect(StatusEffect effect_) {
+        this->effect = effect_;
     }
 
     void nullifiyAttack() {
