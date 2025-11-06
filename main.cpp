@@ -24,7 +24,7 @@
 //---------------->
 enum class damageType{Normal, Slashing, Piercing, Magic, Blood, Holy, Fire, Lightning};
 
-enum class statusEffectType{None, Electrified, Bleeding, Poisoned};
+enum class statusEffectType{None, Electrified, Bleeding, Poisoned, Burning};
 //---------------->
 
 void artificialDelay() {
@@ -47,14 +47,14 @@ public:
     StatusEffect(statusEffectType effectType, int damage, int duration)
         : effectType(effectType), damage(damage), duration(duration) {}
 
-    [[nodiscard]]statusEffectType getEffectType() {
+    [[nodiscard]]statusEffectType getEffectType() const{
         return effectType;
     }
 
-    [[nodiscard]]int getEffectDamage() {
+    [[nodiscard]]int getEffectDamage() const{
         return damage;
     }
-    [[nodiscard]]int getEffectDuration() {
+    [[nodiscard]]int getEffectDuration() const{
         return duration;
     }
 
@@ -66,8 +66,14 @@ public:
         duration = duration - 1;
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const StatusEffect& obj);
 
 };
+
+std::ostream& operator<<(std::ostream& os, const StatusEffect& obj){
+    os<<obj.getEffectDamage()<<" "<<obj.getEffectDuration();
+    return os;
+}
 
 class Attack {
     damageType type;
@@ -128,7 +134,15 @@ public:
 
         return *this;
     }
+
+    friend std::ostream& operator<< (std::ostream& os, const Attack& obj);
+
 };
+
+std::ostream& operator<< (std::ostream& os, const Attack& obj) {
+    os << obj.getStatusEffect()<<' '<<obj.getDamage()<<std::endl;
+    return os;
+}
 
 
 class Entity {
@@ -427,7 +441,7 @@ public:
             StatusEffect effect = {statusEffectType::Poisoned, 1, 2};
             attack.setEffect(effect);
 
-            std::cout<<"...and it infects the enemy!\n";
+            std::cout<<"...and it poisons the enemy!\n";
         }
 
         attack.increaseDamage(infectedDamage) ;
@@ -499,6 +513,7 @@ class AcademicMagic {
     const int threshHold = 5;
     bool active = false;
 
+
     public:
 
     AcademicMagic(int progress, bool active): progress(progress), active(active){}
@@ -561,7 +576,7 @@ public:
     }
 
     void checkAscension() {
-        if (ascension.getProgress() == ascension.getThreshHold()) {
+        if (ascension.getProgress() == ascension.getThreshHold() && !ascension.getActive()) {
             ascension.activate();
             std::cout<<getName()<<" has ascended!\n";
         }
@@ -634,7 +649,7 @@ public:
 
         Attack attack(damageType::Lightning, 2);
         StatusEffect effect = {statusEffectType::Electrified, 1, 2};
-        attack.setEffect(effect);
+
 
         // if mana == 0, exit
         if (manaStatus.getMana() < 2) {
@@ -644,16 +659,45 @@ public:
             return attack;
         }
 
+        attack.setEffect(effect);
+
+
         manaStatus.regenMana(-2);
         ascension.increaseProgress(2);
 
         if (ascension.getActive() == true) {
             attack.increaseDamage(2);
             std::cout<<getName()<<" used Ascended Lightning Bolt!\n";
+            std::cout<<"Enemy is electrified!\n";
             return attack;
         }
 
         std::cout<<getName()<<" used Lightning Bolt!\n";
+        std::cout<<"Enemy is electrified!\n";
+        return attack;
+    }
+
+    Attack pillarOfFire() {
+        Attack attack(damageType::Fire, 2);
+        StatusEffect effect = {statusEffectType::Burning, 2, 2};
+
+        if (manaStatus.getMana() < 5) {
+            attack.nullifiyAttack();
+            std::cout<<getName()<<" tried to cast Pillar of Fire, but is out of mana!\n";
+            return attack;
+        }
+
+        manaStatus.regenMana(-5);
+        ascension.increaseProgress(5);
+
+        if (ascension.getActive() == true) {
+            attack.increaseDamage(2);
+            std::cout<<getName()<<" used Ascended Pillar of Fire!\n";
+            return attack;
+        }
+
+        std::cout<<getName()<<" used Pillar of Fire!\n";
+        std::cout<<"Enemy is burning!\n";
         return attack;
     }
 
@@ -745,7 +789,7 @@ class TurnBasedRPG {
         } else if (dynamic_cast<Vampire*>(player1.get())) {
             std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
         } else if (dynamic_cast<Wizard*>(player1.get())) {
-            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. TODO (Placeholder)\n";
+            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n";
         }
 
         std::cout<<">> ";
@@ -774,6 +818,7 @@ class TurnBasedRPG {
                 case 1: player2->takeDamage(wizard->magicMissile()); break;
                 case 2: player2->takeDamage(wizard->bluntStaff()); break;
                 case 3: player2->takeDamage(wizard->lightningBolt()); break;
+                case 4: player2->takeDamage(wizard->pillarOfFire()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
             wizard->checkAscension();
@@ -810,6 +855,7 @@ class TurnBasedRPG {
                 case 1: player1->takeDamage(wizard->magicMissile()); break;
                 case 2: player1->takeDamage(wizard->bluntStaff()); break;
                 case 3: player1->takeDamage(wizard->lightningBolt()); break;
+                case 4: player1->takeDamage(wizard->pillarOfFire()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
             wizard->checkAscension();
