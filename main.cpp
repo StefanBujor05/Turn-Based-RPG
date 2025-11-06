@@ -686,6 +686,7 @@ public:
             std::cout<<getName()<<" tried to cast Pillar of Fire, but is out of mana!\n";
             return attack;
         }
+        attack.setEffect(effect);
 
         manaStatus.regenMana(-5);
         ascension.increaseProgress(5);
