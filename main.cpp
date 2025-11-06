@@ -505,7 +505,14 @@ public:
     }
 
     Mana(int mana, int totalMana) : currentMana(mana), totalMana(totalMana) {}
+
+    friend std::ostream& operator<<(std::ostream& os, const Mana& m);
 };
+
+std::ostream& operator<<(std::ostream& os, const Mana& m) {
+    os<<m.currentMana<<" "<<m.totalMana;
+    return os;
+}
 
 class AcademicMagic {
 
@@ -539,7 +546,14 @@ class AcademicMagic {
     void activate() {
         active = true;
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const AcademicMagic& m);
 };
+
+std::ostream& operator<<(std::ostream& os, const AcademicMagic& m) {
+    os<<m.progress<<" "<<m.threshHold<<m.active<<" \n";
+    return os;
+}
 
 
 class Wizard : public Entity {
