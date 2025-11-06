@@ -909,6 +909,7 @@ class TurnBasedRPG {
     }
 
 public:
+
     TurnBasedRPG() = default;
 
     void runGame() {
