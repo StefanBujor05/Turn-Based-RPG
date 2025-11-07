@@ -64,6 +64,9 @@ public:
 
     void decrementEffectDuration() const{
         duration = duration - 1;
+        if (duration == 0) {
+            duration = 0;
+        }
     }
 
     friend std::ostream& operator<<(std::ostream& os, const StatusEffect& obj);
@@ -297,7 +300,7 @@ public:
     // ABILITIES -----------------------------------------------------------------------
     [[nodiscard]]Attack swordSlash() {
         //slashes with a longSword
-        Attack attack(damageType::Slashing, 1);
+        Attack attack(damageType::Slashing, 2);
         if (getHealthPoints() == getMaxHealthPoints())
             attack.increaseDamage(1);
 
@@ -767,11 +770,29 @@ public:
 
 };
 
+class RNG {
+
+    std::mt19937 engine;
+
+public:
+
+    RNG() {
+        engine.seed(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    }
+
+    int getInt(int min, int max) {
+
+        std::uniform_int_distribution<int> distribution(min, max);
+        return distribution(engine);
+    }
+};
+
 class TurnBasedRPG {
 
     std::unique_ptr<Entity> player1;
     std::unique_ptr<Entity> player2;
     int playerTurn = 0; // 0 = player1, 1 = player2
+    RNG rng;
 
     void displayStats() const {
         std::cout << "\n--- Current Battle Status ---\n";
@@ -845,7 +866,8 @@ class TurnBasedRPG {
     void enemyAction() {
         int player2Choice;
         srand(time(nullptr));
-        player2Choice = rand()%4 + 1;
+        //player2Choice = rand()%4 + 1;
+        player2Choice = rng.getInt(1, 4);
 
         std::cout << player2->getName() << "'s turn!\n";
 
@@ -955,6 +977,7 @@ public:
 
     }
 };
+
 
 
 
