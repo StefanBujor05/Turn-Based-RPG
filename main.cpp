@@ -9,6 +9,7 @@
 #include<cstdlib>
 #include<thread>
 #include<chrono>
+#include <functional>
 
 // void clear_screen() {
 // #ifdef _WIN32
@@ -75,7 +76,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const StatusEffect& obj){
-    os<<obj.damage<<" "<<obj.duration<<"\n";
+    os<<obj.damage<<" "<<obj.duration<<" ";
     return os;
 }
 
@@ -232,13 +233,46 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const Entity& entity) {
-    os<<entity.healthPoints<<' '<<entity.maxHealthPoints<< ' '<< entity.name<<entity.status<<'\n';
+    os<<entity.healthPoints<<' '<<entity.maxHealthPoints<< ' '<< entity.name<<entity.status<<' ';
+    return os;
+}
+
+// Stance.h (New Class)
+
+class Stance {
+
+    int bonusDamage = 0;
+
+
+public:
+    Stance() = default;
+
+    [[nodiscard]] int getBonusDamage() const {
+        return bonusDamage;
+    }
+    void increaseBonusDamage(const int amount) {
+        bonusDamage += amount;
+    }
+    void resetBonusDamage() {
+        bonusDamage = 0;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Stance& s);
+};
+
+std::ostream& operator<<(std::ostream& os, const Stance& s) {
+
+    if (s.bonusDamage > 0) {
+        os <<s.bonusDamage << " bonus DMG";
+    } else {
+        os << "Normal";
+    }
     return os;
 }
 
 class Knight : public Entity {
 
-    int bonusDamage = 0;
+    Stance currentStance;
 
 public:
 
@@ -246,17 +280,17 @@ public:
         : Entity(name, healthPoints, maxHealthPoints) {}
 
 
-    [[nodiscard]] int getBonusDamage() const {
-        return bonusDamage;
-    }
-
-    void increaseBonusDamage(const int amount) {
-        bonusDamage += amount;
-    }
-
-    void resetBonusDamage() {
-        bonusDamage = 0;
-    }
+    // [[nodiscard]] int getBonusDamage() const {
+    //     return bonusDamage;
+    // }
+    //
+    // void increaseBonusDamage(const int amount) {
+    //     bonusDamage += amount;
+    // }
+    //
+    // void resetBonusDamage() {
+    //     bonusDamage = 0;
+    // }
 
 
     void takeDamage(const Attack& attack) override{
@@ -306,9 +340,9 @@ public:
             attack.increaseDamage(1);
 
 
-        if (bonusDamage) {
-            attack.increaseDamage(bonusDamage);
-            bonusDamage = 0;
+        if (currentStance.getBonusDamage() > 0) {
+            attack.increaseDamage(1);
+            currentStance.resetBonusDamage();
 
         }
 
@@ -335,8 +369,8 @@ public:
         Attack attack(damageType::Piercing, 1);
         std::cout<<Knight::getName()<<" used Preparation Lunge!\n";
 
-        if (!getBonusDamage())
-            increaseBonusDamage(1);
+        if (!currentStance.getBonusDamage()) {}
+            currentStance.increaseBonusDamage(1);
 
         return attack;
 
@@ -350,19 +384,26 @@ public:
         std::cout<<Knight::getName()<<" used opportunity attack!\n";
         Attack attack(damageType::Slashing, 1);
 
-        if (getBonusDamage()) {
-            attack.increaseDamage(2*getBonusDamage());
-            resetBonusDamage();
+        if (currentStance.getBonusDamage()) {
+            attack.increaseDamage(2*currentStance.getBonusDamage());
+            currentStance.resetBonusDamage();
             std::cout<<"...and found an opportunity!\n";
         }
 
         return attack;
     }
 
-
+    friend std::ostream& operator<<(std::ostream& os, const Knight& k);
 
     ~Knight() override = default;
 };
+
+std::ostream& operator<<(std::ostream& os, const Knight& k) {
+
+    os<<static_cast<const Entity&>(k);
+    os<<k.currentStance<<'\n';
+    return os;
+}
 
 
 class Vampire : public Entity {
@@ -720,9 +761,19 @@ public:
         return attack;
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const Wizard& w);
+
     ~Wizard() override = default;
 
 };
+
+std::ostream& operator<<(std::ostream& os, const Wizard& w) {
+
+    os << static_cast<const Entity&>(w);
+    os << w.ascension << w.manaStatus<<"\n";
+
+    return os;
+}
 
 
 class TitleScreen {
@@ -983,6 +1034,7 @@ public:
 
 
 int main() {
+
 
     TitleScreen welcomeScreen;
     TurnBasedRPG game;
