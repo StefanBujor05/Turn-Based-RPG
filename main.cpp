@@ -75,7 +75,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const StatusEffect& obj){
-    os<<obj.getEffectDamage()<<" "<<obj.getEffectDuration();
+    os<<obj.damage<<" "<<obj.duration<<"\n";
     return os;
 }
 
@@ -144,7 +144,7 @@ public:
 };
 
 std::ostream& operator<< (std::ostream& os, const Attack& obj) {
-    os << obj.getStatusEffect()<<' '<<obj.getDamage()<<std::endl;
+    os << obj.damage<<' '<<obj.effect<<std::endl;
     return os;
 }
 
@@ -232,7 +232,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const Entity& entity) {
-    os<<entity.getHealthPoints()<<' '<<entity.getMaxHealthPoints()<< ' '<< entity.getName()<<'\n';
+    os<<entity.healthPoints<<' '<<entity.maxHealthPoints<< ' '<< entity.name<<entity.status<<'\n';
     return os;
 }
 
