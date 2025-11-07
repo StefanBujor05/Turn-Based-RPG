@@ -8,6 +8,7 @@
 #include <memory>
 #include<cstdlib>
 #include<thread>
+#include<chrono>
 
 // void clear_screen() {
 // #ifdef _WIN32
@@ -64,7 +65,7 @@ public:
 
     void decrementEffectDuration() const{
         duration = duration - 1;
-        if (duration == 0) {
+        if (duration < 0) {
             duration = 0;
         }
     }
