@@ -36,6 +36,7 @@ int main() {
     std::cin>>menuChoice;
 
     switch (menuChoice) {
+
         case 2:
             welcomeScreen.printAbout();
             std::cin>>menuChoice;
