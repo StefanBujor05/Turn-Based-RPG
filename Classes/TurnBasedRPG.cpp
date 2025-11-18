@@ -1,0 +1,208 @@
+//
+// Created by bujor on 11/18/2025.
+//
+
+#include "TurnBasedRPG.h"
+#include "Entity.h"
+#include <iostream>
+#include "Wizard.h"
+#include "Knight.h"
+#include "Vampire.h"
+#include <chrono>
+#include <thread>
+#include <random>
+#include <memory>
+#include "RNG.h"
+
+void artificialDelay() {
+    std::chrono::milliseconds delay_duration(500);
+    for (int i = 0; i < 3; i++) {
+        std::this_thread::sleep_for(delay_duration);
+        std::cout << '.';
+    }
+    std::this_thread::sleep_for(delay_duration);
+}
+
+
+    void TurnBasedRPG::displayStats() const {
+        std::cout << "\n--- Current Battle Status ---\n";
+        player1->printHealthBar();
+        if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
+            wizard->printMana();
+            wizard->printAscensionStatus();
+        }
+
+        std::cout<<"\n";
+
+        player2->printHealthBar();
+        if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
+            wizard->printMana();
+            wizard->printAscensionStatus();
+        }
+        std::cout << "-----------------------------\n";
+    }
+
+    void TurnBasedRPG::playerAction() {
+        int playerChoice;
+
+
+        std::cout<<"Choose an attack "<< player1->getName()<<": \n";
+
+
+
+        if (dynamic_cast<Knight*>(player1.get())) {
+            std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
+        } else if (dynamic_cast<Vampire*>(player1.get())) {
+            std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
+        } else if (dynamic_cast<Wizard*>(player1.get())) {
+            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n";
+        }
+
+        std::cout<<">> ";
+        std::cin>>playerChoice;
+
+
+
+        if (auto* knight = dynamic_cast<Knight*>(player1.get())) {
+            switch (playerChoice) {
+                case 1: player2->takeDamage(knight->swordSlash()); break;
+                case 2: player2->takeDamage(knight->preparationLunge()); break;
+                case 3: knight->holyVow(); break;
+                case 4: player2->takeDamage(knight->opportunityStrike()); break;
+                default: std::cout << knight->getName() << " stands firmly!\n"; break;
+            }
+        } else if (auto* vampire = dynamic_cast<Vampire*>(player1.get())) {
+            switch (playerChoice) {
+                case 1: player2->takeDamage(vampire->fangBite()); break;
+                case 2: player2->takeDamage(vampire->bloodSplatter()); break;
+                case 3: player2->takeDamage(vampire->bloodTransfusion()); break;
+                case 4: vampire->bloodSacrifice(); break;
+                default: std::cout << vampire->getName() << " waits...\n"; break;
+            }
+        } else if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
+            switch (playerChoice) {
+                case 1: player2->takeDamage(wizard->magicMissile()); break;
+                case 2: player2->takeDamage(wizard->bluntStaff()); break;
+                case 3: player2->takeDamage(wizard->lightningBolt()); break;
+                case 4: player2->takeDamage(wizard->pillarOfFire()); break;
+                default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
+            }
+            wizard->checkAscension();
+
+        }
+        player1->takeEffectDamage();
+    }
+
+    void TurnBasedRPG::enemyAction() {
+        int player2Choice;
+        srand(time(nullptr));
+        //player2Choice = rand()%4 + 1;
+        player2Choice = rng.getInt(1, 4);
+
+        std::cout << player2->getName() << "'s turn!\n";
+
+        if (auto* knight = dynamic_cast<Knight*>(player2.get())) {
+            switch (player2Choice) {
+                case 1: player1->takeDamage(knight->swordSlash()); break;
+                case 2: player1->takeDamage(knight->preparationLunge()); break;
+                case 3: knight->holyVow(); break;
+                case 4: player1->takeDamage(knight->opportunityStrike()); break;
+                default: std::cout << knight->getName() << " stands firmly!\n"; break;
+            }
+        } else if (auto* vampire = dynamic_cast<Vampire*>(player2.get())) {
+            switch (player2Choice) {
+                case 1: player1->takeDamage(vampire->fangBite()); break;
+                case 2: player1->takeDamage(vampire->bloodSplatter()); break;
+                case 3: player1->takeDamage(vampire->bloodTransfusion()); break;
+                case 4: vampire->bloodSacrifice(); break;
+                default: std::cout << vampire->getName() << " waits...\n"; break;
+            }
+        } else if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
+            switch (player2Choice) {
+                case 1: player1->takeDamage(wizard->magicMissile()); break;
+                case 2: player1->takeDamage(wizard->bluntStaff()); break;
+                case 3: player1->takeDamage(wizard->lightningBolt()); break;
+                case 4: player1->takeDamage(wizard->pillarOfFire()); break;
+                default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
+            }
+            wizard->checkAscension();
+        }
+        player2->takeEffectDamage();
+    }
+
+    bool TurnBasedRPG::checkGameOver() const {
+        if (player1->getHealthPoints() <= 0) {
+            std::cout<<"\nGAME OVER! "<<player2->getName()<<" has won!\n";
+            return true;
+        }
+        if (player2->getHealthPoints() <= 0) {
+            std::cout<<"\nGAME OVER! "<<player1->getName()<<" has won!\n";
+            return true;
+        }
+        return false;
+    }
+
+    void TurnBasedRPG::setupGame() {
+        int classChoice;
+        std::string playerName;
+
+        artificialDelay();
+        std::cout<<"Who are you? \n>>";
+        std::cin>>playerName;
+        //std::cout<<"\n";
+        std::cout<<"And what is your class?: \n1. Knight \n2. Vampire \n3. Wizard \n>> ";
+        std::cin>>classChoice;
+        std::cout<<"\n";
+
+        switch(classChoice) {
+            case 1:
+                player1 = std::make_unique<Knight>(playerName, 10, 10);
+                break;
+            case 2:
+                player1 = std::make_unique<Vampire>(playerName, 10, 10);
+                break;
+            case 3:
+                player1 = std::make_unique<Wizard>(playerName, 8, 8);
+                break;
+            default:
+                std::cout<<"Invalid choice. Exiting game.\n";
+                player1 = nullptr;
+                return;
+        }
+
+        std::cout<<"You are playing as "<<player1->getName()<<"\n";
+
+        player2 = std::make_unique<Wizard>("Maegistus", 8, 8);
+    }
+
+
+
+    TurnBasedRPG::TurnBasedRPG() = default;
+
+    void TurnBasedRPG::runGame() {
+        setupGame();
+
+        if (!player1) {
+            return; // erori la alegerea jucatorului
+        }
+
+        bool gameOver = false;
+        while (!gameOver) {
+            displayStats();
+
+            if (playerTurn == 0) {
+                playerAction();
+            } else {
+                artificialDelay();
+                enemyAction();
+            }
+
+            gameOver = checkGameOver();
+
+            std::cout<<"\n-------------------------------------\n";
+
+            playerTurn = 1 - playerTurn;
+
+        }
+
+    }

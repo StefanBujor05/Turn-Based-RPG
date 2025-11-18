@@ -50,6 +50,32 @@ include(cmake/CopyHelper.cmake)
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
+        Classes/Knight.cpp
+        Classes/Knight.h
+        Classes/Stance.cpp
+        Classes/Stance.h
+        Classes/Vampire.cpp
+        Classes/Vampire.h
+        Classes/Attack.cpp
+        Classes/Attack.h
+        Classes/Entity.cpp
+        Classes/Entity.h
+        Classes/StatusEffect.cpp
+        Classes/StatusEffect.h
+        Classes/enums.cpp
+        Classes/enums.h
+        Classes/Mana.cpp
+        Classes/Mana.h
+        Classes/AcademicMagic.cpp
+        Classes/AcademicMagic.h
+        Classes/Wizard.cpp
+        Classes/Wizard.h
+        Classes/TitleScreen.cpp
+        Classes/TitleScreen.h
+        Classes/RNG.cpp
+        Classes/RNG.h
+        Classes/TurnBasedRPG.cpp
+        Classes/TurnBasedRPG.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

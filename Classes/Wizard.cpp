@@ -1,0 +1,168 @@
+//
+// Created by bujor on 11/18/2025.
+//
+
+#include "Wizard.h"
+
+    Wizard::Wizard(const std::string &name, int healthPoints, int maxHealthPoints)
+        : Entity(name, healthPoints, maxHealthPoints){}
+
+
+    void Wizard::printMana() {
+        std::cout<<"         Mana: "<<manaStatus.getMana()<<'/'<<manaStatus.getTotalMana();
+        for (int i = 0; i < manaStatus.getMana(); i++) {
+            std::cout<<'|';
+        }
+        for (int i = 0; i < manaStatus.getTotalMana() - manaStatus.getMana(); i++) {
+            std::cout<<'.';
+        }
+        std::cout<<'\n';
+    }
+
+    void Wizard::printAscensionStatus() {
+        std::cout<<"    Ascension: "<<ascension.getProgress()<<'/'<<ascension.getThreshHold()<<' ';
+        for (int i = 0; i < ascension.getProgress(); i++) {
+            std::cout<<'|';
+        }
+        for (int i = 0; i < ascension.getThreshHold() - ascension.getProgress(); i++) {
+            std::cout<<'.';
+        }
+        std::cout<<'\n';
+    }
+
+    void Wizard::checkAscension() {
+        if (ascension.getProgress() == ascension.getThreshHold() && !ascension.getActive()) {
+            ascension.activate();
+            std::cout<<getName()<<" has ascended!\n";
+        }
+    }
+
+    void Wizard::takeDamage(const Attack &attack) {
+
+        int damageVal = attack.getDamage();
+        StatusEffect effect = attack.getStatusEffect();
+
+        if (attack.isActive() == false) {
+            return;
+        }
+
+        if (attack.getType() == damageType::Slashing ||
+            attack.getType() == damageType::Piercing   ) {
+            damageVal*=2;
+            std::cout << "It's super effective!\n";
+        }
+
+        if (attack.getType() == damageType::Holy ||
+            attack.getType() == damageType::Blood  ) {
+            damageVal/=2;
+            std::cout << "It's not very effective!\n";
+        }
+
+        if (effect.getEffectType() != statusEffectType::None) {
+            setEffect(effect);
+        }
+
+        if (damageVal <= 0) {
+            //damageVal = 0;
+            std::cout<<"...but "<<getName()<<" isn't affected!\n";
+        }
+        else {
+            std::cout<<getName()<<" has taken "<<damageVal<<" damage!\n";
+            loseHealth(damageVal);
+        }
+    }
+
+    // ABILITIES ---------------------------------------------->
+
+    Attack Wizard::magicMissile() {
+
+        //consume 1 mana and deal 2 damage
+        Attack attack(damageType::Magic, 2);
+
+        std::cout<<getName()<<" cast Magic Missle\n";
+
+        if (manaStatus.getMana() < 1) {
+            attack.increaseDamage(-2);
+            attack.nullifiyAttack();
+            std::cout<<"...but is out of mana\n";
+        } else {
+            manaStatus.regenMana(-1);
+            ascension.increaseProgress(1);
+        }
+
+        return attack;
+    }
+
+    Attack Wizard::bluntStaff() {
+        // deals 1 damage regardless of mana
+        std::cout<<getName()<<" used Blunt Staff\n";
+        Attack attack(damageType::Normal, 1);
+        return attack;
+    }
+
+    Attack Wizard::lightningBolt() {
+
+        Attack attack(damageType::Lightning, 2);
+        StatusEffect effect = {statusEffectType::Electrified, 1, 2};
+
+
+        // if mana == 0, exit
+        if (manaStatus.getMana() < 2) {
+            attack.nullifiyAttack();
+            std::cout<<getName()<<" tried to cast Lightning Bolt!\n";
+            std::cout<<"...but is out of mana\n";
+            return attack;
+        }
+
+        attack.setEffect(effect);
+
+
+        manaStatus.regenMana(-2);
+        ascension.increaseProgress(2);
+
+        if (ascension.getActive() == true) {
+            attack.increaseDamage(2);
+            std::cout<<getName()<<" used Ascended Lightning Bolt!\n";
+            std::cout<<"Enemy is electrified!\n";
+            return attack;
+        }
+
+        std::cout<<getName()<<" used Lightning Bolt!\n";
+        std::cout<<"Enemy is electrified!\n";
+        return attack;
+    }
+
+    Attack Wizard::pillarOfFire() {
+        Attack attack(damageType::Fire, 2);
+        StatusEffect effect = {statusEffectType::Burning, 2, 2};
+
+        if (manaStatus.getMana() < 5) {
+            attack.nullifiyAttack();
+            std::cout<<getName()<<" tried to cast Pillar of Fire, but is out of mana!\n";
+            return attack;
+        }
+        attack.setEffect(effect);
+
+        manaStatus.regenMana(-5);
+        ascension.increaseProgress(5);
+
+        if (ascension.getActive() == true) {
+            attack.increaseDamage(2);
+            std::cout<<getName()<<" used Ascended Pillar of Fire!\n";
+            return attack;
+        }
+
+        std::cout<<getName()<<" used Pillar of Fire!\n";
+        std::cout<<"Enemy is burning!\n";
+        return attack;
+    }
+
+    Wizard::~Wizard() = default;
+
+std::ostream& operator<<(std::ostream& os, const Wizard& w) {
+
+    os << static_cast<const Entity&>(w);
+    os << w.ascension << w.manaStatus<<"\n";
+
+    return os;
+}
