@@ -49,6 +49,5 @@ int main() {
         default: std::cout<<"Invalid choice. Exiting game.\n";
                 exit(0);
     }
-
     return 0;
 }
