@@ -26,7 +26,6 @@
 
 int main() {
 
-
     TitleScreen welcomeScreen;
     TurnBasedRPG game;
     int menuChoice;
