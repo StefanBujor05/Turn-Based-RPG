@@ -14,6 +14,7 @@ class Entity {
     const std::string name;
     int healthPoints;
     int maxHealthPoints;
+    static int entityCount;
     StatusEffect status = {statusEffectType::None, 0, 0};
 
 
@@ -23,6 +24,7 @@ public:
     [[nodiscard]] int getHealthPoints() const;
     [[nodiscard]] int getMaxHealthPoints() const;
     [[nodiscard]] const std::string& getName() const;
+    [[nodiscard]] int getEntityCount() const;
     void takeEffectDamage();
 
     void setEffect(StatusEffect effect);
@@ -44,7 +46,7 @@ public:
 
     virtual void takeDamage(const Attack& attack)=0;
 
-    virtual ~Entity();
+    virtual ~Entity()=0;
 
 
 };

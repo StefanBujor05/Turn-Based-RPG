@@ -5,6 +5,8 @@
 #include "Entity.h"
 
 
+int Entity::entityCount = 0;
+
     //getters
     [[nodiscard]] int Entity::getHealthPoints() const {
         return healthPoints;
@@ -14,6 +16,9 @@
     }
     [[nodiscard]] const std::string& Entity::getName() const {
         return name;
+    }
+    [[nodiscard]] int Entity::getEntityCount() const {
+        return entityCount;
     }
 
     void Entity::takeEffectDamage() {
@@ -56,7 +61,9 @@
     // constructor
 
     Entity::Entity(const std::string &name, int healthPoints, int maxHealthPoints)
-        : name(name), healthPoints(healthPoints),  maxHealthPoints(maxHealthPoints){}
+        : name(name), healthPoints(healthPoints),  maxHealthPoints(maxHealthPoints) {
+        entityCount++;
+    }
 
     // methods
 
@@ -70,7 +77,9 @@
 
     //void Entity::takeDamage(const Attack& attack) = 0;
 
-    Entity::~Entity()= default;
+    Entity::~Entity() {
+        entityCount--;
+    }
 
 std::ostream& operator<<(std::ostream& os, const Entity& entity) {
     os<<entity.healthPoints<<' '<<entity.maxHealthPoints<< ' '<< entity.name<<entity.status<<' ';
