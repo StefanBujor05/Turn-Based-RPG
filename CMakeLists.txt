@@ -76,6 +76,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Classes/RNG.h
         Classes/TurnBasedRPG.cpp
         Classes/TurnBasedRPG.h
+        Classes/Blacksmith.cpp
+        Classes/Blacksmith.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

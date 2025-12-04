@@ -9,6 +9,7 @@
 
     void Attack::increaseDamage(const int amount) {
         damage += amount;
+
     }
 
     void Attack::setEffect(StatusEffect effect_) {

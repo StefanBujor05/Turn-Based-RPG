@@ -14,6 +14,10 @@ enum class damageType {
 enum class statusEffectType {
     None, Electrified, Bleeding, Poisoned, Burning
 };
+
+enum class weapons {
+    None, Claymore, Hammer, Axe
+};
 //---------------->
 
 #endif // ENUMS_H
