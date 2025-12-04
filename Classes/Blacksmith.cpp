@@ -58,9 +58,9 @@ void Blacksmith::takeDamage(const Attack& attack) {
     }
 }
 
-[[nodiscard]] weapons Blacksmith::getWeapon() const {
-    return weapon;
-}
+// [[nodiscard]] weapons Blacksmith::getWeapon() const {
+//     return weapon;
+// }
 
 void Blacksmith::printStats() const{
     std::cout<<"       Armour: "<<armour<<"/2 ";
@@ -177,6 +177,9 @@ Attack Blacksmith::weaponAttack() {
         return attack;
     }
 
+    Attack defaultAttack(damageType::Normal, 1);
+    defaultAttack.nullifiyAttack();
+    return defaultAttack;
 }
 
 Blacksmith::~Blacksmith() = default;

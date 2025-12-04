@@ -33,7 +33,7 @@ void artificialDelay() {
             wizard->printMana();
             wizard->printAscensionStatus();
         }
-        else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
+        else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
             blacksmith->printStats();
         }
 
@@ -44,7 +44,7 @@ void artificialDelay() {
             wizard->printMana();
             wizard->printAscensionStatus();
         }
-        else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player2.get())) {
+        else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player2.get())) {
             blacksmith->printStats();
         }
         std::cout << "-----------------------------\n";

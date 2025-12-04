@@ -24,7 +24,7 @@ public:
     [[nodiscard]] int getHealthPoints() const;
     [[nodiscard]] int getMaxHealthPoints() const;
     [[nodiscard]] const std::string& getName() const;
-    [[nodiscard]] int getEntityCount() const;
+    //[[nodiscard]] int getEntityCount() const;
     void takeEffectDamage();
 
     void setEffect(StatusEffect effect);

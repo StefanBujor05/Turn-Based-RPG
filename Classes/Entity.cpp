@@ -17,9 +17,7 @@ int Entity::entityCount = 0;
     [[nodiscard]] const std::string& Entity::getName() const {
         return name;
     }
-    [[nodiscard]] int Entity::getEntityCount() const {
-        return entityCount;
-    }
+    //
 
     void Entity::takeEffectDamage() {
         if (status.getEffectType() != statusEffectType::None && status.getEffectDuration() > 0) {

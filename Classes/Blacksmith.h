@@ -23,7 +23,7 @@ class Blacksmith: public Entity {
     void takeDamage(const Attack& attack) override;
     void printStats ()const;
 
-    [[nodiscard]] weapons getWeapon() const;
+    //[[nodiscard]] weapons getWeapon() const;
 
     // Abilities
 
