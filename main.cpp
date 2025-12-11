@@ -52,7 +52,8 @@ int main() {
                     [[fallthrough]];
 
                 case 1: game.runGame();
-                    break;
+                        exit(0);
+                        break;
 
                 case 3: std::cout << "Goodbye! ";
                     exit(0);
