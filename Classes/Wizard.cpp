@@ -122,7 +122,7 @@
                     return qElectricShock();
                 case 2:
                     quickSpells.pop_back();
-                    return qElectricShock();
+                    return qIceSpike();
                 default:
                     std::cout<<"No more quickspells left\n";
                     return defaultAtk;
