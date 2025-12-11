@@ -123,6 +123,8 @@ Attack Vampire::bloodTransfusion() {
         return attack;
     }
 
+    return attack;
+
 }
 
 Vampire::~Vampire() = default;
