@@ -23,32 +23,46 @@
 #include "Classes/StatusEffect.h"
 #include "Classes/TitleScreen.h"
 #include "Classes/TurnBasedRPG.h"
+#include "Classes/GameExceptions.h"
 
 int main() {
 
     TitleScreen welcomeScreen;
     TurnBasedRPG game;
+
     int menuChoice;
 
     welcomeScreen.printASCII();
     welcomeScreen.printMenu();
 
-    std::cin>>menuChoice;
 
-    switch (menuChoice) {
 
-        case 2:
-            welcomeScreen.printAbout();
-            std::cin>>menuChoice;
-            [[fallthrough]];
+    while (true) {
+        std::cin>>menuChoice;
 
-        case 1: game.runGame();
-                break;
+        try {
 
-        case 3: std::cout<<"Goodbye! ";
-                exit(0);
-        default: std::cout<<"Invalid choice. Exiting game.\n";
-                exit(0);
+            if (menuChoice < 1 || menuChoice > 3) {
+                throw InvalidMenuException(" no such menu option");
+            }
+            switch (menuChoice) {
+                case 2:
+                    welcomeScreen.printAbout();
+                    std::cin >> menuChoice;
+                    [[fallthrough]];
+
+                case 1: game.runGame();
+                    break;
+
+                case 3: std::cout << "Goodbye! ";
+                    exit(0);
+                default: std::cout << "Invalid choice. Exiting game.\n";
+                    exit(0);
+            }
+        } catch (InvalidMenuException& e) {
+            std::cout << e.what();
+        }
+        welcomeScreen.printMenu();
     }
     return 0;
 }

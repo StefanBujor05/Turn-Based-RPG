@@ -13,6 +13,7 @@ void artificialDelay();
 
 class TurnBasedRPG {
 
+
     std::unique_ptr<Entity> player1;
     std::unique_ptr<Entity> player2;
     int playerTurn = 0; // 0 = player1, 1 = player2

@@ -2,8 +2,10 @@
 // Created by bujor on 11/20/2025.
 //
 
+#include <iostream>
 #include "Blacksmith.h"
 #include "Attack.h"
+#include "GameExceptions.h"
 
 
 Blacksmith::Blacksmith(const std::string &name, int healthPoints, int maxHealthPoints, weapons w, int enhancement = 0, int armour= 0)
@@ -124,20 +126,22 @@ void Blacksmith::chooseWeapon() {
 }
 
 void Blacksmith::echanceWeapon() {
+    try{
+        if (weapon == weapons::None) throw InvalidAbilityException(" no weapon available to enchance\n");
 
-    if (weapon == weapons::None) return;
-
-    if (enhancement < 3) {
-        enhancement++;
-        std::cout<<getName()<<" enhanced their weapon!\n";
-        return;
+        if (enhancement < 3) {
+            enhancement++;
+            std::cout<<getName()<<" enhanced their weapon!\n";
+            return;
         }
 
-    std::cout<<getName()<<"'s weapon is fully enhanced already!\n";
+        std::cout<<getName()<<"'s weapon is fully enhanced already!\n";
 
     }
-
-
+    catch(InvalidAbilityException& e) {
+        std::cout<<e.what()<<"\n";
+    }
+}
 void Blacksmith::enhanceArmour() {
 
     if (armour > 1) return;

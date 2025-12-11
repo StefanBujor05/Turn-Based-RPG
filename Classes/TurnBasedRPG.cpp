@@ -12,9 +12,10 @@
 #include <thread>
 #include <random>
 #include <memory>
-
+#include "GameExceptions.h"
 #include "Blacksmith.h"
 #include "RNG.h"
+
 
 void artificialDelay() {
     std::chrono::milliseconds delay_duration(500);
@@ -24,7 +25,6 @@ void artificialDelay() {
     }
     std::this_thread::sleep_for(delay_duration);
 }
-
 
     void TurnBasedRPG::displayStats() const {
         std::cout << "\n--- Current Battle Status ---\n";
@@ -71,8 +71,6 @@ void artificialDelay() {
         std::cout<<">> ";
         std::cin>>playerChoice;
 
-
-
         if (auto* knight = dynamic_cast<Knight*>(player1.get())) {
             switch (playerChoice) {
                 case 1: player2->takeDamage(knight->swordSlash()); break;
@@ -81,6 +79,7 @@ void artificialDelay() {
                 case 4: player2->takeDamage(knight->opportunityStrike()); break;
                 default: std::cout << knight->getName() << " stands firmly!\n"; break;
             }
+
         } else if (auto* vampire = dynamic_cast<Vampire*>(player1.get())) {
             switch (playerChoice) {
                 case 1: player2->takeDamage(vampire->fangBite()); break;
@@ -180,6 +179,11 @@ void artificialDelay() {
         std::cin>>classChoice;
         std::cout<<"\n";
 
+    try {
+        if (classChoice < 1 || classChoice > 4) {
+            throw InvalidClassException(" class does not exist.");
+        }
+
         switch(classChoice) {
             case 1:
                 player1 = std::make_unique<Knight>(playerName, 10, 10);
@@ -198,6 +202,10 @@ void artificialDelay() {
                 player1 = nullptr;
                 return;
         }
+    }
+    catch (InvalidClassException& e){
+        std::cout<<e.what()<<"\n";
+    }
 
         std::cout<<"You are playing as "<<player1->getName()<<"\n";
 

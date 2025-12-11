@@ -3,8 +3,8 @@
 //
 
 #include "Vampire.h"
-
-
+#include "GameExceptions.h"
+#include <iostream>
 
 Vampire::Vampire (const std::string &name, int healthPoints, int maxHealthPoints)
     : Entity(name, healthPoints, maxHealthPoints) {}
@@ -108,15 +108,20 @@ Attack Vampire::bloodTransfusion() {
     // deals very high blood dmg
     Attack attack(damageType::Blood, 4);
 
-    if (getHealthPoints() == 1) {
-        std::cout<<getName()<<" used their last bit of strength!\n";
+    try {
+        if (getHealthPoints() > 1) throw InvalidAbilityException(" health needs to be 1");
+
+            if (getHealthPoints() == 1) {
+                std::cout<<getName()<<" used their last bit of strength!\n";
+                return attack;
+            }
+    }
+    catch (InvalidAbilityException& e) {
+        attack.nullifiyAttack();
+        std::cout<<getName()<<" attempted a blood transfusion...\n...but is not yet strong enough\n";
+        std::cout<<e.what()<<"\n";
         return attack;
     }
-
-    //attack.increaseDamage(-4);
-    attack.nullifiyAttack();
-    std::cout<<getName()<<" attempted a blood transfusion...\n...but is not yet strong enough\n";
-    return attack;
 
 }
 
