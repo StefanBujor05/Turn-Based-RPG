@@ -63,7 +63,7 @@ void artificialDelay() {
         } else if (dynamic_cast<Vampire*>(player1.get())) {
             std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
         } else if (dynamic_cast<Wizard*>(player1.get())) {
-            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n";
+            std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n5. Quick Spell\n";
         } else if (dynamic_cast<Blacksmith*>(player1.get())) {
             std::cout << "1. Choose weapon\n2. Enchance weapon \n3. Enchance armour\n4. Weapon attack\n";
         }
@@ -102,6 +102,7 @@ void artificialDelay() {
                 case 2: player2->takeDamage(wizard->bluntStaff()); break;
                 case 3: player2->takeDamage(wizard->lightningBolt()); break;
                 case 4: player2->takeDamage(wizard->pillarOfFire()); break;
+                case 5: player2->takeDamage(wizard->quickSpell()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
             wizard->checkAscension();
@@ -148,6 +149,7 @@ void artificialDelay() {
                 case 2: player1->takeDamage(wizard->bluntStaff()); break;
                 case 3: player1->takeDamage(wizard->lightningBolt()); break;
                 case 4: player1->takeDamage(wizard->pillarOfFire()); break;
+                case 5: player1->takeDamage(wizard->quickSpell()); break;
                 default: std::cout << wizard->getName() << " is concentrating on other matters\n"; break;
             }
             wizard->checkAscension();

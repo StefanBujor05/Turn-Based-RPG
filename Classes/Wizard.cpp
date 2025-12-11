@@ -5,7 +5,12 @@
 #include "Wizard.h"
 
     Wizard::Wizard(const std::string &name, int healthPoints, int maxHealthPoints)
-        : Entity(name, healthPoints, maxHealthPoints){}
+        : Entity(name, healthPoints, maxHealthPoints) {
+        quickSpells.push_back("Quick Firebolt");
+        quickSpells.push_back("Quick Electric Shock");
+        quickSpells.push_back("Quick Ice Spike");
+    }
+
 
 
     void Wizard::printMana() {
@@ -73,6 +78,57 @@
     }
 
     // ABILITIES ---------------------------------------------->
+
+    Attack Wizard::qFireBolt() {
+
+        Attack attack(damageType::Fire, 1);
+        StatusEffect effect(statusEffectType::Burning, 1, 1);
+        std::cout<<getName()<<" fired Quick Fire Bolt!\n";
+
+        attack.setEffect(effect);
+        return attack;
+    }
+
+    Attack Wizard::qElectricShock() {
+
+        Attack attack(damageType::Lightning, 1);
+        StatusEffect effect(statusEffectType::Electrified, 1, 1);
+        std::cout<<getName()<<" fired Quick Electric shock!\n";
+
+        attack.setEffect(effect);
+        return attack;
+    }
+
+    Attack Wizard::qIceSpike() {
+
+        Attack attack(damageType::Frost, 1);
+        std::cout<<getName()<<" fired Quick Ice Spike!\n";
+
+        return attack;
+    }
+
+
+    Attack Wizard::quickSpell() {
+
+        Attack defaultAtk(damageType::Normal, 0);
+        defaultAtk.nullifiyAttack();
+
+            switch (quickSpells.size() - 1) {
+                case 0:
+                    quickSpells.pop_back();
+                    return qFireBolt();
+                case 1:
+                    quickSpells.pop_back();
+                    return qElectricShock();
+                case 2:
+                    quickSpells.pop_back();
+                    return qElectricShock();
+                default:
+                    std::cout<<"No more quickspells left\n";
+                    return defaultAtk;
+            }
+
+        }
 
     Attack Wizard::magicMissile() {
 

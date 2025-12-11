@@ -126,6 +126,7 @@ void Blacksmith::chooseWeapon() {
 }
 
 void Blacksmith::echanceWeapon() {
+
     try{
         if (weapon == weapons::None) throw InvalidAbilityException(" no weapon available to enchance\n");
 

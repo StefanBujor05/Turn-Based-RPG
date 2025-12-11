@@ -8,7 +8,7 @@
 
 
 enum class damageType {
-    Normal, Slashing, Piercing, Magic, Blood, Holy, Fire, Lightning
+    Normal, Slashing, Piercing, Magic, Blood, Holy, Fire, Lightning, Frost
 };
 
 enum class statusEffectType {

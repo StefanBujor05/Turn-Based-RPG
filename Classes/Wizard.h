@@ -10,12 +10,19 @@
 #include "Entity.h"
 #include "Mana.h"
 #include "AcademicMagic.h"
+#include <vector>
 
 
 class Wizard : public Entity {
 
     Mana manaStatus = {10, 10};
     AcademicMagic ascension = {0, false};
+    std::vector<std::string> quickSpells;
+
+    Attack qFireBolt();
+    Attack qElectricShock();
+    Attack qIceSpike();
+
 
 public:
 
@@ -31,6 +38,8 @@ public:
     void takeDamage(const Attack &attack) override;
 
     // ABILITIES ---------------------------------------------->
+
+    Attack quickSpell();
 
     Attack magicMissile();
 

@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "enums.h"
 #include "Attack.h"
+#include <vector>
 
 
 class Blacksmith: public Entity {
