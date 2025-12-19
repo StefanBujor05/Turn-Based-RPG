@@ -33,7 +33,7 @@ void artificialDelay() {
             wizard->printMana();
             wizard->printAscensionStatus();
         }
-        else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
+        else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
             blacksmith->printStats();
         }
         else if (const auto* viking = dynamic_cast<Viking*>(player1.get())) {
