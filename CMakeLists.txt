@@ -80,6 +80,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Classes/Blacksmith.h
         Classes/GameExceptions.cpp
         Classes/GameExceptions.h
+        Classes/Viking.cpp
+        Classes/Viking.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

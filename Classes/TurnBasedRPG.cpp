@@ -15,7 +15,7 @@
 #include "GameExceptions.h"
 #include "Blacksmith.h"
 #include "RNG.h"
-
+#include "Viking.h"
 
 void artificialDelay() {
     std::chrono::milliseconds delay_duration(500);
@@ -33,8 +33,11 @@ void artificialDelay() {
             wizard->printMana();
             wizard->printAscensionStatus();
         }
-        else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
+        else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
             blacksmith->printStats();
+        }
+        else if (auto* viking = dynamic_cast<Viking*>(player1.get())) {
+            viking->printRage();
         }
 
         std::cout<<"\n";
@@ -46,6 +49,9 @@ void artificialDelay() {
         }
         else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player2.get())) {
             blacksmith->printStats();
+        }
+        else if (auto* viking = dynamic_cast<Viking*>(player2.get())) {
+            viking->printRage();
         }
         std::cout << "-----------------------------\n";
     }
@@ -66,6 +72,8 @@ void artificialDelay() {
             std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n5. Quick Spell\n";
         } else if (dynamic_cast<Blacksmith*>(player1.get())) {
             std::cout << "1. Choose weapon\n2. Enchance weapon \n3. Enchance armour\n4. Weapon attack\n";
+        } else if (dynamic_cast<Viking*>(player1.get())) {
+            std::cout << "1. Ancestral Scream\n2. Axe Chop \n3. Spirit Sweep\n4. Healing Prayer\n";
         }
 
         std::cout<<">> ";
@@ -95,6 +103,14 @@ void artificialDelay() {
                 case 3: blacksmith->enhanceArmour(); break;
                 case 4: player2->takeDamage(blacksmith->weaponAttack()); break;
                 default: std::cout << blacksmith->getName() << " patiently waits...\n"; break;
+            }
+        } else if (auto* viking = dynamic_cast<Viking*>(player1.get())) {
+            switch (playerChoice) {
+                case 1: viking->ancestralScream(); break;
+                case 2: player2->takeDamage(viking->axeChop()); break;
+                case 3: player2->takeDamage(viking->spiritSweep()); break;
+                case 4: viking->healingPrayer(); break;
+                default: std::cout << viking->getName() << " watches...\n"; break;
             }
         } else if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             switch (playerChoice) {
@@ -143,7 +159,15 @@ void artificialDelay() {
                 case 4: player1->takeDamage(blacksmith->weaponAttack()); break;
                 default: std::cout << blacksmith->getName() << " patiently waits...\n"; break;
             }
-        }else if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
+        } else if (auto* viking = dynamic_cast<Viking*>(player2.get())) {
+            switch (player2Choice) {
+                case 1: viking->ancestralScream(); break;
+                case 2: player1->takeDamage(viking->axeChop()); break;
+                case 3: player1->takeDamage(viking->spiritSweep()); break;
+                case 4: viking->healingPrayer(); break;
+                default: std::cout << viking->getName() << " watches...\n"; break;
+            }
+        } else if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
             switch (player2Choice) {
                 case 1: player1->takeDamage(wizard->magicMissile()); break;
                 case 2: player1->takeDamage(wizard->bluntStaff()); break;
@@ -177,12 +201,12 @@ void artificialDelay() {
         std::cout<<"Who are you? \n>>";
         std::cin>>playerName;
         //std::cout<<"\n";
-        std::cout<<"And what is your class?: \n1. Knight \n2. Vampire \n3. Wizard \n4. Blacksmith \n>> ";
+        std::cout<<"And what is your class?: \n1. Knight \n2. Vampire \n3. Wizard \n4. Blacksmith \n5. Viking\n>> ";
         std::cin>>classChoice;
         std::cout<<"\n";
 
     try {
-        if (classChoice < 1 || classChoice > 4) {
+        if (classChoice < 1 || classChoice > 5) {
             throw InvalidClassException(" class does not exist.");
         }
 
@@ -198,6 +222,9 @@ void artificialDelay() {
                 break;
             case 4:
                 player1 = std::make_unique<Blacksmith>(playerName, 12, 12, weapons::None, 0, 0);
+                break;
+            case 5:
+                player1 = std::make_unique<Viking>(playerName, 10, 10, 0, 7);
                 break;
             default:
                 std::cout<<"Invalid choice. Exiting game.\n";
