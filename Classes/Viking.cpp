@@ -48,8 +48,17 @@ void Viking::takeDamage(const Attack &attack) {
 
 }
 
+void Viking::checkRage(){
+
+    if (rage >= rageLimit && !enraged) {
+        std::cout<<getName()<<" is enraged!\n";
+        enraged = true;
+    }
+}
+
+
 void Viking::printRage() const{
-    std::cout<<"         Rage: "<<rage<<'/'<<rageLimit;
+    std::cout<<"         Rage: "<<rage<<'/'<<rageLimit<<' ';
     for (int i = 0; i < rage; i++) {
         std::cout<<'|';
     }
@@ -64,7 +73,7 @@ void Viking::ancestralScream() {
     // invokes past ancestors in order to grant special effect
     // next 2 attacks deal 1 less damage
 
-    if (rage >= rageLimit) {
+    if (enraged) {
         std::cout<<getName()<<" is too enraged to focus.\n";
         return;
     }
@@ -75,7 +84,7 @@ void Viking::ancestralScream() {
 
 void Viking::healingPrayer() {
 
-    if (rage >= rageLimit) {
+    if (enraged) {
         std::cout<<getName()<<" is too enraged to focus.\n";
         return;
     }
@@ -88,15 +97,18 @@ Attack Viking::axeChop() {
     Attack attack(damageType::Slashing, 2);
     StatusEffect effect(statusEffectType::Bleeding, 1, 1);
 
-    if (rage >= rageLimit) {
+    if (enraged) {
         attack.setEffect(effect);
         attack.increaseDamage(1);
     }
 
-    if (rage < rageLimit) {
-        rage+= attack.getDamage();
+    if (!enraged) {
+        rage+= attack.getDamage() + 1;
+        if (rage > rageLimit) {
+            rage = rageLimit;
+        }
     }
-    std::cout<<getName()<<" slames their axe!\n";
+    std::cout<<getName()<<" slams their axe!\n";
     return attack;
 
 }
@@ -109,9 +121,13 @@ Attack Viking::spiritSweep() {
     }
     if (rage < rageLimit) {
         rage+= attack.getDamage();
+
+        if (rage > rageLimit) {
+            rage = rageLimit;
+        }
     }
 
-    std::cout<<getName()<<" slices, followd by their spirits!\n";
+    std::cout<<getName()<<" slices, followed by their spirit!\n";
     return attack;
 }
 

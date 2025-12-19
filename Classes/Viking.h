@@ -12,6 +12,7 @@ class Viking: public Entity{
     int rage;
     int rageLimit = 7;
     int ancestralResistance;
+    bool enraged = false;
 
 public:
 
@@ -27,6 +28,7 @@ public:
     Attack axeChop();
     Attack spiritSweep();
     void healingPrayer();
+    void checkRage();
 
 
     ~Viking() override;

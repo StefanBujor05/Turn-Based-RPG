@@ -12,14 +12,14 @@
         std::cout<<"<>xxxx[{::::::::::::::::::::::::> \n";
         std::cout<<"      [ \n";
 
-        std::cout<<"           GAME TITLE\n";
+        std::cout<<"       OUR LADY OF SORROWS\n";
 
         std::cout<<"                         [\n";
         std::cout<<"<::::::::::::::::::::::::[{xxxx<>\n";
         std::cout<<"                         [\n";
     }
 
-    void  TitleScreen::printMenu() const{
+    void TitleScreen::printMenu() const{
         std::cout<<"\n";
         std::cout<<"[1] Start Game\n";
         std::cout<<"[2] About\n";
@@ -27,7 +27,7 @@
         std::cout<<">>";
     }
 
-    void  TitleScreen::printAbout() const {
+    void TitleScreen::printAbout() const {
         std::cout<<"\n";
         std::cout<<"<------------- About ------------->\n\n";
         std::cout<<"Made by: Bujor Stefan\n"

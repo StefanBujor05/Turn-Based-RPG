@@ -27,7 +27,7 @@ void artificialDelay() {
 }
 
     void TurnBasedRPG::displayStats() const {
-        std::cout << "\n--- Current Battle Status ---\n";
+        std::cout << "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
         player1->printHealthBar();
         if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             wizard->printMana();
@@ -112,6 +112,7 @@ void artificialDelay() {
                 case 4: viking->healingPrayer(); break;
                 default: std::cout << viking->getName() << " watches...\n"; break;
             }
+            viking->checkRage();
         } else if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             switch (playerChoice) {
                 case 1: player2->takeDamage(wizard->magicMissile()); break;
@@ -167,6 +168,7 @@ void artificialDelay() {
                 case 4: viking->healingPrayer(); break;
                 default: std::cout << viking->getName() << " watches...\n"; break;
             }
+            viking->checkRage();
         } else if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
             switch (player2Choice) {
                 case 1: player1->takeDamage(wizard->magicMissile()); break;
@@ -212,19 +214,19 @@ void artificialDelay() {
 
         switch(classChoice) {
             case 1:
-                player1 = std::make_unique<Knight>(playerName, 10, 10);
+                player1 = std::make_unique<Knight>(playerName, 15, 15);
                 break;
             case 2:
-                player1 = std::make_unique<Vampire>(playerName, 10, 10);
+                player1 = std::make_unique<Vampire>(playerName, 11, 11);
                 break;
             case 3:
-                player1 = std::make_unique<Wizard>(playerName, 8, 8);
+                player1 = std::make_unique<Wizard>(playerName, 12, 12);
                 break;
             case 4:
-                player1 = std::make_unique<Blacksmith>(playerName, 12, 12, weapons::None, 0, 0);
+                player1 = std::make_unique<Blacksmith>(playerName, 13, 13, weapons::None, 0, 0);
                 break;
             case 5:
-                player1 = std::make_unique<Viking>(playerName, 10, 10, 0, 7);
+                player1 = std::make_unique<Viking>(playerName, 15, 15, 0, 7);
                 break;
             default:
                 std::cout<<"Invalid choice. Exiting game.\n";
@@ -238,7 +240,7 @@ void artificialDelay() {
 
         std::cout<<"You are playing as "<<player1->getName()<<"\n";
 
-        player2 = std::make_unique<Wizard>("Maegistus", 8, 8);
+        player2 = std::make_unique<Wizard>("Maegistus", 12, 12);
     }
 
 
