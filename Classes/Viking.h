@@ -19,7 +19,7 @@ public:
 
     void takeDamage(const Attack& attack) override;
 
-    void printRage();
+    void printRage() const;
 
     // Attacks -------->
 

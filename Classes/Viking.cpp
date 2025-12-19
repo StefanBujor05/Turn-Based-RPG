@@ -48,7 +48,7 @@ void Viking::takeDamage(const Attack &attack) {
 
 }
 
-void Viking::printRage() {
+void Viking::printRage() const{
     std::cout<<"         Rage: "<<rage<<'/'<<rageLimit;
     for (int i = 0; i < rage; i++) {
         std::cout<<'|';

@@ -36,7 +36,7 @@ void artificialDelay() {
         else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
             blacksmith->printStats();
         }
-        else if (auto* viking = dynamic_cast<Viking*>(player1.get())) {
+        else if (const auto* viking = dynamic_cast<Viking*>(player1.get())) {
             viking->printRage();
         }
 
@@ -50,7 +50,7 @@ void artificialDelay() {
         else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player2.get())) {
             blacksmith->printStats();
         }
-        else if (auto* viking = dynamic_cast<Viking*>(player2.get())) {
+        else if (const auto* viking = dynamic_cast<Viking*>(player2.get())) {
             viking->printRage();
         }
         std::cout << "-----------------------------\n";
