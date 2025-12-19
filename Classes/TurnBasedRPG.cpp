@@ -27,7 +27,7 @@ void artificialDelay() {
 }
 
     void TurnBasedRPG::displayStats() const {
-        std::cout << "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
+        std::cout << "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
         player1->printHealthBar();
         if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
             wizard->printMana();
@@ -53,7 +53,7 @@ void artificialDelay() {
         else if (const auto* viking = dynamic_cast<Viking*>(player2.get())) {
             viking->printRage();
         }
-        std::cout << "-----------------------------\n";
+        std::cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
     }
 
     void TurnBasedRPG::playerAction() {
@@ -267,7 +267,7 @@ void artificialDelay() {
 
             gameOver = checkGameOver();
 
-            std::cout<<"\n-------------------------------------\n";
+            std::cout<<"\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
 
             playerTurn = 1 - playerTurn;
 
