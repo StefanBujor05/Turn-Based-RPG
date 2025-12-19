@@ -8,6 +8,8 @@ Current options are:
 - Knight
 - Wizard
 - Vampire
+- Blacksmith
+- Viking
 
 Each class has unique attacks as well as passive abilities and effects.
 
@@ -17,9 +19,8 @@ In the about section, you can find a list of recommended albums to use as a soun
 for the game, consisting of mainly death/black metal. 
 
 ### TODO:
-- Finish wizard abilities and passives.
-- Add 4th class.
-- Fix bug when ability is unusable, but still affects the opponent.
+- add attack/ability handling to each class, rather than in a separate class, avoiding unnecessary `dynamic_cast`
+- improve visibility
 
 ### Tema 0
 
