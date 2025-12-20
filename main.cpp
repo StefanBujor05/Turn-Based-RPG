@@ -36,7 +36,6 @@ int main() {
     welcomeScreen.printMenu();
 
 
-
     while (true) {
         std::cin>>menuChoice;
 

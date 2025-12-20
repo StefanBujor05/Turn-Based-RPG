@@ -18,6 +18,15 @@ enum class statusEffectType {
 enum class weapons {
     None, Claymore, Hammer, Axe
 };
+
+enum class EntityType {
+    Knight = 1,
+    Vampire,
+    Wizard,
+    Blacksmith,
+    Viking
+};
+
 //---------------->
 
 #endif // ENUMS_H

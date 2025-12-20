@@ -82,6 +82,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Classes/GameExceptions.h
         Classes/Viking.cpp
         Classes/Viking.h
+        Classes/EntityFactory.cpp
+        Classes/EntityFactory.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

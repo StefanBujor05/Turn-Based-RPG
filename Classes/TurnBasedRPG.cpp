@@ -16,6 +16,7 @@
 #include "Blacksmith.h"
 #include "RNG.h"
 #include "Viking.h"
+#include "EntityFactory.h"
 
 void artificialDelay() {
     std::chrono::milliseconds delay_duration(500);
@@ -195,54 +196,39 @@ void artificialDelay() {
         return false;
     }
 
-    void TurnBasedRPG::setupGame() {
-        int classChoice;
-        std::string playerName;
+void TurnBasedRPG::setupGame() {
+    std::string playerName;
+    int classChoice;
 
-        artificialDelay();
-        std::cout<<"Who are you? \n>>";
-        std::cin>>playerName;
-        //std::cout<<"\n";
-        std::cout<<"And what is your class?: \n1. Knight \n2. Vampire \n3. Wizard \n4. Blacksmith \n5. Viking\n>> ";
-        std::cin>>classChoice;
-        std::cout<<"\n";
+    artificialDelay();
+    std::cout << "Who are you?\n>> ";
+    std::cin >> playerName;
+
+    std::cout <<
+        "Choose your class:\n"
+        "1. Knight\n"
+        "2. Vampire\n"
+        "3. Wizard\n"
+        "4. Blacksmith\n"
+        "5. Viking\n>> ";
+
+    std::cin >> classChoice;
 
     try {
-        if (classChoice < 1 || classChoice > 5) {
-            throw InvalidClassException(" class does not exist.");
-        }
-
-        switch(classChoice) {
-            case 1:
-                player1 = std::make_unique<Knight>(playerName, 15, 15);
-                break;
-            case 2:
-                player1 = std::make_unique<Vampire>(playerName, 11, 11);
-                break;
-            case 3:
-                player1 = std::make_unique<Wizard>(playerName, 12, 12);
-                break;
-            case 4:
-                player1 = std::make_unique<Blacksmith>(playerName, 13, 13, weapons::None, 0, 0);
-                break;
-            case 5:
-                player1 = std::make_unique<Viking>(playerName, 15, 15, 0, 7);
-                break;
-            default:
-                std::cout<<"Invalid choice. Exiting game.\n";
-                player1 = nullptr;
-                return;
-        }
-    }
-    catch (InvalidClassException& e){
-        std::cout<<e.what()<<"\n";
+        player1 = EntityFactory::createEntity(
+            static_cast<EntityType>(classChoice),
+            playerName
+        );
+    } catch (const InvalidClassException& e) {
+        std::cout << e.what() << "\n";
+        player1 = nullptr;
+        return;
     }
 
-        std::cout<<"You are playing as "<<player1->getName()<<"\n";
+    std::cout << "You are playing as " << player1->getName() << "\n";
 
-        player2 = std::make_unique<Wizard>("Maegistus", 12, 12);
-    }
-
+    player2 = EntityFactory::createEntity(EntityType::Wizard, "Maegistus");
+}
 
 
     TurnBasedRPG::TurnBasedRPG() = default;
@@ -251,7 +237,7 @@ void artificialDelay() {
         setupGame();
 
         if (!player1) {
-            return; // erori la alegerea jucatorului
+            return;
         }
 
         bool gameOver = false;
