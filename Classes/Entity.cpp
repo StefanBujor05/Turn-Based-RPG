@@ -65,6 +65,11 @@ int Entity::entityCount = 0;
 
     // methods
 
+    void Entity::healStatus() {
+        while (status.getEffectDuration())
+            status.decrementEffectDuration();
+    }
+
     void Entity::loseHealth(int damage) {
         if(healthPoints < damage) {
             healthPoints = 0;

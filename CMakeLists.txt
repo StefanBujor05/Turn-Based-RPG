@@ -84,6 +84,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         Classes/Viking.h
         Classes/EntityFactory.cpp
         Classes/EntityFactory.h
+        Classes/Threshold.cpp
+        Classes/Threshold.h
+        Classes/Archer.cpp
+        Classes/Archer.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

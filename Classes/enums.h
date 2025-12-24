@@ -24,7 +24,8 @@ enum class EntityType {
     Vampire,
     Wizard,
     Blacksmith,
-    Viking
+    Viking,
+    Archer
 };
 
 //---------------->

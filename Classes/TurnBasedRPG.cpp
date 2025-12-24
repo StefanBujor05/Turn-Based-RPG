@@ -12,6 +12,8 @@
 #include <thread>
 #include <random>
 #include <memory>
+
+#include "Archer.h"
 #include "GameExceptions.h"
 #include "Blacksmith.h"
 #include "RNG.h"
@@ -75,6 +77,8 @@ void artificialDelay() {
             std::cout << "1. Choose weapon\n2. Enchance weapon \n3. Enchance armour\n4. Weapon attack\n";
         } else if (dynamic_cast<Viking*>(player1.get())) {
             std::cout << "1. Ancestral Scream\n2. Axe Chop \n3. Spirit Sweep\n4. Healing Prayer\n";
+        } else if (dynamic_cast<Archer*>(player1.get())) {
+            std::cout << "1. Arrow Shot\n2. Poison Arrow \n3. Elven Healing\n4. Hide\n";
         }
 
         std::cout<<">> ";
@@ -105,6 +109,15 @@ void artificialDelay() {
                 case 4: player2->takeDamage(blacksmith->weaponAttack()); break;
                 default: std::cout << blacksmith->getName() << " patiently waits...\n"; break;
             }
+        } else if (auto* archer = dynamic_cast<Archer*>(player1.get())) {
+            switch (playerChoice) {
+                case 1: player2->takeDamage(archer->arrowShot()); break;
+                case 2: player2->takeDamage(archer->poisonArrow()); break;
+                case 3: archer->elvenHealing(); break;
+                case 4: archer->hide(); break;
+                default: std::cout << archer->getName() << " is listening.\n"; break;
+            }
+
         } else if (auto* viking = dynamic_cast<Viking*>(player1.get())) {
             switch (playerChoice) {
                 case 1: viking->ancestralScream(); break;
@@ -161,6 +174,15 @@ void artificialDelay() {
                 case 4: player1->takeDamage(blacksmith->weaponAttack()); break;
                 default: std::cout << blacksmith->getName() << " patiently waits...\n"; break;
             }
+        } else if (auto* archer = dynamic_cast<Archer*>(player2.get())) {
+            switch (player2Choice) {
+                case 1: player1->takeDamage(archer->arrowShot()); break;
+                case 2: player1->takeDamage(archer->poisonArrow()); break;
+                case 3: archer->elvenHealing(); break;
+                case 4: archer->hide(); break;
+                default: std::cout << archer->getName() << " is listening.\n"; break;
+            }
+
         } else if (auto* viking = dynamic_cast<Viking*>(player2.get())) {
             switch (player2Choice) {
                 case 1: viking->ancestralScream(); break;
@@ -210,7 +232,8 @@ void TurnBasedRPG::setupGame() {
         "2. Vampire\n"
         "3. Wizard\n"
         "4. Blacksmith\n"
-        "5. Viking\n>> ";
+        "5. Viking\n"
+        "6. Archer\n>>";
 
     std::cin >> classChoice;
 
@@ -260,3 +283,5 @@ void TurnBasedRPG::setupGame() {
         }
 
     }
+
+

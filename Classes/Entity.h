@@ -40,6 +40,8 @@ public:
 
     // methods
 
+    void healStatus();
+
     void loseHealth(int damage);
 
     friend std::ostream& operator<<(std::ostream &os, const Entity &e);

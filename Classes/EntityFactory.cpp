@@ -8,6 +8,7 @@
 #include "Wizard.h"
 #include "Blacksmith.h"
 #include "Viking.h"
+#include "Archer.h"
 #include "GameExceptions.h"
 #include "enums.h"
 
@@ -26,6 +27,8 @@ std::unique_ptr<Entity> EntityFactory::createEntity(
             return std::make_unique<Blacksmith>(name, 13, 13, weapons::None, 0, 0);
         case EntityType::Viking:
             return std::make_unique<Viking>(name, 15, 15, 0, 7);
+        case EntityType::Archer:
+            return std::make_unique<Archer>(name, 12, 12);
         default:
             throw InvalidClassException("Invalid entity type.");
     }
