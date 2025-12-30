@@ -150,9 +150,15 @@
     }
 
     Attack Wizard::bluntStaff() {
-        // deals 1 damage regardless of mana
+        // damage ability for a last resort when out of mana
+        // if mana is 0, it deals double damage
         std::cout<<getName()<<" used Blunt Staff\n";
         Attack attack(damageType::Normal, 1);
+
+        if (manaStatus.getMana() == 0) {
+            attack.increaseDamage(1);
+        }
+
         return attack;
     }
 
@@ -190,7 +196,7 @@
 
     Attack Wizard::pillarOfFire() {
         Attack attack(damageType::Fire, 2);
-        StatusEffect effect = {statusEffectType::Burning, 2, 2};
+        StatusEffect effect = {statusEffectType::Burning, 2, 1};
 
         if (manaStatus.getMana() < 5) {
             attack.nullifiyAttack();
@@ -203,7 +209,7 @@
         ascension.increaseProgress(5);
 
         if (ascension.getActive() == true) {
-            attack.increaseDamage(2);
+            attack.increaseDamage(1);
             std::cout<<getName()<<" used Ascended Pillar of Fire!\n";
             return attack;
         }

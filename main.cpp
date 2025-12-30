@@ -50,7 +50,8 @@ int main() {
                     std::cin >> menuChoice;
                     [[fallthrough]];
 
-                case 1: game.runGame();
+                case 1:
+                    game.runGame();
                         exit(0);
                         break;
 

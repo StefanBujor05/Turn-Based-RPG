@@ -11,13 +11,14 @@ class Knight : public Entity {
 
 private:
     Stance currentStance;
+    bool raisedShield = false;
 
 public:
     // Constructor
     Knight(const std::string &name, int healthPoints, int maxHealthPoints);
 
     // Virtual function overridden from Entity
-    void takeDamage(const Attack& attack) override;
+    void takeDamage(const Attack& attack) override; // if shield is raised, the next atk deals bonus dmg
 
     // Abilities (declared here, defined in .cpp)
     [[nodiscard]]Attack swordSlash();

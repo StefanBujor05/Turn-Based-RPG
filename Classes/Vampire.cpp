@@ -43,8 +43,21 @@ void Vampire::takeDamage(const Attack& attack) {
         loseHealth(damageVal);
     }
 
-
 }
+
+void Vampire::increaseHemorrhage(float value) {
+
+    hemorrhage += value;
+    if (hemorrhage == hemorrhageThreshold.getValue()) {
+        hemorrhage = hemorrhageThreshold.getValue();
+    }
+}
+
+void Vampire::printHemorrhage() const {
+    std::cout<<"Hemorrhage: ";
+    hemorrhageThreshold.printThreshold(hemorrhage);
+}
+
 
     // ABILITIES -----------------------------------------------------------------------
 Attack Vampire::fangBite(){
@@ -52,6 +65,12 @@ Attack Vampire::fangBite(){
     // doubled when below 50% hp
     Attack attack(damageType::Piercing, 1);
     int healAmount = 1;
+
+    if (hemorrhageThreshold.isMet(hemorrhage)) {
+        hemorrhage = 0;
+        attack.increaseDamage(2);
+        healAmount++;
+    }
 
     std::cout<<getName()<<" used Fang Bite!\n";
 
@@ -63,6 +82,8 @@ Attack Vampire::fangBite(){
 
     heal(healAmount); // Healing happens regardless of bonus damage, just amount changes
 
+    increaseHemorrhage(4.5f);
+
     return attack;
 }
 
@@ -72,12 +93,18 @@ Attack Vampire::bloodSplatter() {
     // dealing extra damage
     Attack attack(damageType::Blood, 1);
 
-    int infectedDamage = 0;
+    //int infectedDamage = 0;
+
+    if (hemorrhageThreshold.isMet(hemorrhage)) {
+        hemorrhage = 0;
+        StatusEffect effect = {statusEffectType::Poisoned, 1, 2};
+        attack.setEffect(effect);
+        attack.increaseDamage(1);
+    }
 
     std::cout<<getName()<<" used Blood Splatter!\n";
 
     if (getHealthPoints() < getMaxHealthPoints()/2) {
-        //infectedDamage = 1;
 
         StatusEffect effect = {statusEffectType::Poisoned, 1, 2};
         attack.setEffect(effect);
@@ -85,8 +112,9 @@ Attack Vampire::bloodSplatter() {
         std::cout<<"...and it poisons the enemy!\n";
     }
 
-    attack.increaseDamage(infectedDamage) ;
+    increaseHemorrhage(2.5f);
 
+    //attack.increaseDamage(infectedDamage) ;
     return attack;
 }
 
@@ -100,6 +128,8 @@ void Vampire::bloodSacrifice() {
     else
         std::cout<<getName()<<" attemped a blood sacrifice\n ...but it failed.\n";
 
+    increaseHemorrhage(2.5f);
+
 }
 
 Attack Vampire::bloodTransfusion() {
@@ -107,6 +137,13 @@ Attack Vampire::bloodTransfusion() {
     // can only be used when 1hp
     // deals very high blood dmg
     Attack attack(damageType::Blood, 4);
+    int healAmount = 2;
+
+    if (hemorrhageThreshold.isMet(hemorrhage)) {
+        hemorrhage = 0;
+        attack.increaseDamage(2);
+        healAmount++;
+    }
 
     try {
         if (getHealthPoints() > 1) throw InvalidAbilityException(" health needs to be 1");
@@ -123,6 +160,7 @@ Attack Vampire::bloodTransfusion() {
         return attack;
     }
 
+    heal(healAmount);
     return attack;
 
 }

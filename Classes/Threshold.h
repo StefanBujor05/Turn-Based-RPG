@@ -4,6 +4,8 @@
 
 #ifndef THRESHOLD_H
 #define THRESHOLD_H
+#include <iostream>
+#include <bits/ostream.tcc>
 
 
 template<typename T>
@@ -17,6 +19,10 @@ public:
     }
 
     T getValue() const{ return value; }
+
+    void printThreshold(T currentValue) const {
+        std::cout << currentValue << '/'<<value<<'\n';
+    }
 };
 
 template<typename T>

@@ -58,7 +58,7 @@ void Archer::takeDamage(const Attack& attack) {
 
 void Archer::hide() {
     hidden = true;
-    std::cout<<getName()<<getName()<<" is hidden!\n";
+    std::cout<<getName()<<" is hidden!\n";
 }
 
 void Archer::elvenHealing() {
@@ -69,12 +69,12 @@ void Archer::elvenHealing() {
 
 Attack Archer::arrowShot() {
 
-    Attack attack(damageType::Piercing, 3);
+    Attack attack(damageType::Piercing, 2);
 
     std::cout<<getName()<<" fired an arrow!\n";
 
     if (hidden) {
-        critChanceBonus += 5;
+        critChanceBonus = 5;
         hidden = false;
         std::cout<<getName()<<" came out of hiding!\n";
     }
@@ -85,6 +85,7 @@ Attack Archer::arrowShot() {
         std::cout<<"It's a crit!\n";
     }
 
+    critChanceBonus = 0;
     return attack;
 }
 
@@ -97,7 +98,7 @@ Attack Archer::poisonArrow() {
     std::cout<<getName()<<" fired a poison arrow!\n";
 
     if (hidden) {
-        critChanceBonus += 5;
+        critChanceBonus = 5;
         hidden = false;
         std::cout<<getName()<<" came out of hiding!\n";
     }
@@ -108,10 +109,9 @@ Attack Archer::poisonArrow() {
         std::cout<<"It's a crit!\n";
     }
 
+    critChanceBonus = 0;
     return attack;
 }
-
-
 
 
 Archer::~Archer() = default;

@@ -42,6 +42,9 @@ void artificialDelay() {
         else if (const auto* viking = dynamic_cast<Viking*>(player1.get())) {
             viking->printRage();
         }
+        else if (const auto* vampire = dynamic_cast<Vampire*>(player1.get())) {
+            vampire->printHemorrhage();
+        }
 
         std::cout<<"\n";
 
@@ -56,6 +59,10 @@ void artificialDelay() {
         else if (const auto* viking = dynamic_cast<Viking*>(player2.get())) {
             viking->printRage();
         }
+        else if (const auto* vampire = dynamic_cast<Vampire*>(player2.get())) {
+            vampire->printHemorrhage();
+        }
+
         std::cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
     }
 
@@ -101,6 +108,7 @@ void artificialDelay() {
                 case 4: vampire->bloodSacrifice(); break;
                 default: std::cout << vampire->getName() << " waits...\n"; break;
             }
+
         } else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
             switch (playerChoice) {
                 case 1: blacksmith->chooseWeapon(); break;
@@ -166,6 +174,7 @@ void artificialDelay() {
                 case 4: vampire->bloodSacrifice(); break;
                 default: std::cout << vampire->getName() << " waits...\n"; break;
             }
+
         } else if (auto* blacksmith = dynamic_cast<Blacksmith*>(player2.get())) {
             switch (player2Choice) {
                 case 1: blacksmith->chooseWeapon(); break;
