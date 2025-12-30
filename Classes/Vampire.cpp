@@ -48,7 +48,7 @@ void Vampire::takeDamage(const Attack& attack) {
 void Vampire::increaseHemorrhage(float value) {
 
     hemorrhage += value;
-    if (hemorrhage == hemorrhageThreshold.getValue()) {
+    if (hemorrhage > hemorrhageThreshold.getValue()) {
         hemorrhage = hemorrhageThreshold.getValue();
     }
 }

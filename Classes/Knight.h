@@ -11,7 +11,7 @@ class Knight : public Entity {
 
 private:
     Stance currentStance;
-    bool raisedShield = false;
+    //bool raisedShield = false;
 
 public:
     // Constructor
