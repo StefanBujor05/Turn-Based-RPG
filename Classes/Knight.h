@@ -7,11 +7,12 @@
 #include "Stance.h"
 #include "Attack.h" // Required for ability return type
 
+
 class Knight : public Entity {
 
 private:
     Stance currentStance;
-    //bool raisedShield = false;
+    //bool raisedShield = false; TODO
 
 public:
     // Constructor
@@ -20,13 +21,15 @@ public:
     // Virtual function overridden from Entity
     void takeDamage(const Attack& attack) override; // if shield is raised, the next atk deals bonus dmg
 
+    void performAction(Entity &enemy) override;
+    void performEnemyAction(Entity& player) override;
+
     // Abilities (declared here, defined in .cpp)
     [[nodiscard]]Attack swordSlash();
     void holyVow();
     Attack preparationLunge();
     Attack opportunityStrike();
 
-    // Overloaded stream operator (declared as a friend)
     friend std::ostream& operator<<(std::ostream& os, const Knight& k);
 
     // Virtual destructor

@@ -45,6 +45,37 @@ void Vampire::takeDamage(const Attack& attack) {
 
 }
 
+void Vampire::performAction(Entity& enemy) {
+
+    int playerChoice;
+    std::cout << "1. Fang Bite\n2. Blood Splatter\n3. Blood Transfusion\n4. Blood Sacrifice\n";
+    std::cout<<">>";
+    std::cin >> playerChoice;
+
+    switch (playerChoice) {
+        case 1: enemy.takeDamage(this->fangBite()); break;
+        case 2: enemy.takeDamage(this->bloodSplatter()); break;
+        case 3: enemy.takeDamage(this->bloodTransfusion()); break;
+        case 4: this->bloodSacrifice(); break;
+        default: std::cout << this->getName() << " waits...\n"; break;
+    }
+
+}
+
+void Vampire::performEnemyAction(Entity &player) {
+
+    int enemyChoice = rng.getInt(1, 4);
+
+    switch (enemyChoice) {
+        case 1: player.takeDamage(this->fangBite()); break;
+        case 2: player.takeDamage(this->bloodSplatter()); break;
+        case 3: player.takeDamage(this->bloodTransfusion()); break;
+        case 4: this->bloodSacrifice(); break;
+        default: std::cout << this->getName() << " waits...\n"; break;
+    }
+
+}
+
 void Vampire::increaseHemorrhage(float value) {
 
     hemorrhage += value;

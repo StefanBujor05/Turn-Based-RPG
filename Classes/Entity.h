@@ -8,6 +8,8 @@
 #include "Attack.h"
 #include <iostream>
 #include "enums.h"
+#include "RNG.h"
+
 
 class Entity {
 
@@ -17,6 +19,8 @@ class Entity {
     static int entityCount;
     StatusEffect status = {statusEffectType::None, 0, 0};
 
+protected:
+    RNG rng;
 
 public:
 
@@ -25,6 +29,9 @@ public:
     [[nodiscard]] int getMaxHealthPoints() const;
     [[nodiscard]] const std::string& getName() const;
     //[[nodiscard]] int getEntityCount() const;
+
+    virtual void performAction(Entity& enemy) = 0;
+    virtual void performEnemyAction(Entity& player) = 0;
     void takeEffectDamage();
 
     void setEffect(StatusEffect effect);

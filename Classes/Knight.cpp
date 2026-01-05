@@ -1,6 +1,7 @@
 #include "Knight.h"
 #include <stdio.h>
 #include "Entity.h"
+#include "RNG.h"
 
 // Constructor Definition
 Knight::Knight(const std::string &name, int healthPoints, int maxHealthPoints)
@@ -59,6 +60,34 @@ Attack Knight::swordSlash() {
     std::cout<<Knight::getName()<<" used Sword Slash!\n";
     return attack;
 }
+
+void Knight::performAction(Entity &enemy) {
+    int playerChoice;
+    std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
+    std::cout<<">>";
+    std::cin >> playerChoice;
+
+    switch (playerChoice) {
+        case 1: enemy.takeDamage(this->swordSlash()); break;
+        case 2: enemy.takeDamage(this->preparationLunge()); break;
+        case 3: this->holyVow(); break;
+        case 4: enemy.takeDamage(this->opportunityStrike()); break;
+        default: std::cout << this->getName() << " stands firmly!\n"; break;
+    }
+}
+
+void Knight::performEnemyAction(Entity &player) {
+    int enemyChoice = rng.getInt(1, 4);
+
+    switch (enemyChoice) {
+        case 1: player.takeDamage(this->swordSlash()); break;
+        case 2: player.takeDamage(this->preparationLunge()); break;
+        case 3: this->holyVow(); break;
+        case 4: player.takeDamage(this->opportunityStrike()); break;
+        default: std::cout << this->getName() << " stands firmly!\n"; break;
+    }
+}
+
 
 void Knight::holyVow() {
     int healAmount = 1;

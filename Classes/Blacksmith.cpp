@@ -60,6 +60,35 @@ void Blacksmith::takeDamage(const Attack& attack) {
     }
 }
 
+    void Blacksmith::performAction(Entity& enemy){
+
+        int playerChoice;
+        std::cout << "1. Choose weapon\n2. Enchance weapon \n3. Enchance armour\n4. Weapon attack\n";std::cout<<">>";
+        std::cin >> playerChoice;
+
+        switch (playerChoice) {
+            case 1: this->chooseWeapon(); break;
+            case 2: this->echanceWeapon(); break;
+            case 3: this->enhanceArmour(); break;
+            case 4: enemy.takeDamage(this->weaponAttack()); break;
+            default: std::cout << this->getName() << " patiently waits...\n"; break;
+        }
+
+
+    }
+
+    void Blacksmith::performEnemyAction(Entity& player) {
+    int enemyChoice = rng.getInt(1, 4);
+
+    switch (enemyChoice) {
+        case 1: this->chooseWeapon(); break;
+        case 2: this->echanceWeapon(); break;
+        case 3: this->enhanceArmour(); break;
+        case 4: player.takeDamage(this->weaponAttack()); break;
+        default: std::cout << this->getName() << " patiently waits...\n"; break;
+    }
+}
+
 // [[nodiscard]] weapons Blacksmith::getWeapon() const {
 //     return weapon;
 // }

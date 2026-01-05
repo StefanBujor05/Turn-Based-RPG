@@ -18,6 +18,9 @@ public:
 
     Viking(const std::string &name, int healthPoints, int maxHealthPoints, int rage, int ancestralResistance);
 
+    void performAction(Entity &enemy) override;
+    void performEnemyAction(Entity& player) override;
+
     void takeDamage(const Attack& attack) override;
 
     void printRage() const;

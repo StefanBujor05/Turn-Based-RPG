@@ -19,6 +19,11 @@ class TurnBasedRPG {
     int playerTurn = 0; // 0 = player1, 1 = player2
     RNG rng;
 
+
+    void playerActionImproved();
+    void enemyActionImproved();
+
+
     void displayStats() const;
 
     void playerAction();

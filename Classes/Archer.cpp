@@ -56,6 +56,36 @@ void Archer::takeDamage(const Attack& attack) {
 
 }
 
+void Archer::performAction(Entity& enemy){
+
+    int playerChoice;
+    std::cout << "1. Arrow Shot\n2. Poison Arrow \n3. Elven Healing\n4. Hide\n";
+    std::cout<<">>";
+    std::cin >> playerChoice;
+
+    switch (playerChoice) {
+        case 1: enemy.takeDamage(this->arrowShot()); break;
+        case 2: enemy.takeDamage(this->poisonArrow()); break;
+        case 3: this->elvenHealing(); break;
+        case 4: this->hide(); break;
+        default: std::cout << this->getName() << " is listening.\n"; break;
+    }
+
+}
+
+void Archer::performEnemyAction(Entity& player) {
+    int enemyChoice = rng.getInt(1, 4);
+
+    switch (enemyChoice) {
+        case 1: player.takeDamage(this->arrowShot()); break;
+        case 2: player.takeDamage(this->poisonArrow()); break;
+        case 3: this->elvenHealing(); break;
+        case 4: this->hide(); break;
+        default: std::cout << this->getName() << " is listening.\n"; break;
+    }
+
+}
+
 void Archer::hide() {
     hidden = true;
     std::cout<<getName()<<" is hidden!\n";

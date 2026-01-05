@@ -21,6 +21,9 @@ class Blacksmith: public Entity {
 
     Blacksmith(const std::string &name, int healthPoints, int maxHealthPoints, weapons w, int enhancement, int armour);
 
+    void performAction(Entity& enemy) override;
+    void performEnemyAction(Entity& player) override;
+
     void takeDamage(const Attack& attack) override;
     void printStats ()const;
 

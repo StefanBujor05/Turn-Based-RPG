@@ -48,6 +48,39 @@ void Viking::takeDamage(const Attack &attack) {
 
 }
 
+void Viking::performAction(Entity &enemy) {
+
+    int playerChoice;
+    std::cout << "1. Ancestral Scream\n2. Axe Chop \n3. Spirit Sweep\n4. Healing Prayer\n";
+    std::cout<<">>";
+    std::cin >> playerChoice;
+
+    switch (playerChoice) {
+        case 1: this->ancestralScream(); break;
+        case 2: enemy.takeDamage(this->axeChop()); break;
+        case 3: enemy.takeDamage(this->spiritSweep()); break;
+        case 4: this->healingPrayer(); break;
+        default: std::cout << this->getName() << " watches...\n"; break;
+    }
+    this->checkRage();
+
+}
+
+void Viking::performEnemyAction(Entity& player) {
+
+    int enemyChoice = rng.getInt(1, 4);
+
+    switch (enemyChoice) {
+        case 1: this->ancestralScream(); break;
+        case 2: player.takeDamage(this->axeChop()); break;
+        case 3: player.takeDamage(this->spiritSweep()); break;
+        case 4: this->healingPrayer(); break;
+        default: std::cout << this->getName() << " watches...\n"; break;
+    }
+    this->checkRage();
+}
+
+
 void Viking::checkRage(){
 
     if (rage >= rageLimit && !enraged) {

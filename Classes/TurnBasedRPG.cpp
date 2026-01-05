@@ -215,6 +215,22 @@ void artificialDelay() {
         player2->takeEffectDamage();
     }
 
+
+
+void TurnBasedRPG::playerActionImproved() {
+
+    player1->performAction(*player2);
+    player1->takeEffectDamage();
+}
+
+void TurnBasedRPG::enemyActionImproved() {
+
+    player2->performEnemyAction(*player1);
+    player2->takeEffectDamage();
+}
+
+
+
     bool TurnBasedRPG::checkGameOver() const {
         if (player1->getHealthPoints() <= 0) {
             std::cout<<"\nGAME OVER! "<<player2->getName()<<" has won!\n";
@@ -277,10 +293,12 @@ void TurnBasedRPG::setupGame() {
             displayStats();
 
             if (playerTurn == 0) {
-                playerAction();
+                //playerAction();
+                playerActionImproved();
             } else {
                 artificialDelay();
-                enemyAction();
+                //enemyAction();
+                enemyActionImproved();
             }
 
             gameOver = checkGameOver();

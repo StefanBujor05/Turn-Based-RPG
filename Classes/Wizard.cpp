@@ -77,6 +77,39 @@
         }
     }
 
+void Wizard::performAction(Entity& enemy) {
+        int playerChoice;
+        std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n5. Quick Spell\n";
+        std::cout<<">>";
+        std::cin >> playerChoice;
+
+        switch (playerChoice) {
+            case 1: enemy.takeDamage(this->magicMissile()); break;
+            case 2: enemy.takeDamage(this->bluntStaff()); break;
+            case 3: enemy.takeDamage(this->lightningBolt()); break;
+            case 4: enemy.takeDamage(this->pillarOfFire()); break;
+            case 5: enemy.takeDamage(this->quickSpell()); break;
+            default: std::cout << this->getName() << " is concentrating on other matters\n"; break;
+        }
+        this->checkAscension();
+    }
+
+void Wizard::performEnemyAction(Entity &player) {
+
+        int enemyChoice = rng.getInt(1,5);
+
+        switch (enemyChoice) {
+            case 1: player.takeDamage(this->magicMissile()); break;
+            case 2: player.takeDamage(this->bluntStaff()); break;
+            case 3: player.takeDamage(this->lightningBolt()); break;
+            case 4: player.takeDamage(this->pillarOfFire()); break;
+            case 5: player.takeDamage(this->quickSpell()); break;
+            default: std::cout << this->getName() << " is concentrating on other matters\n"; break;
+        }
+        this->checkAscension();
+}
+
+
     // ABILITIES ---------------------------------------------->
 
     Attack Wizard::qFireBolt() {

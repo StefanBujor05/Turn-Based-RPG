@@ -22,6 +22,7 @@ public:
     //Attack (damageType type, int damage) : type(type), damage(damage){}
     Attack (damageType type, int damage);
 
+
     void increaseDamage(const int amount);
 
     void setEffect(StatusEffect effect_);
