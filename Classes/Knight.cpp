@@ -17,6 +17,12 @@ void Knight::takeDamage(const Attack& attack) {
         return;
     }
 
+    if (raisedShield && attack.getType() != damageType::Magic
+                     && attack.getType() != damageType::Holy) {
+        damageVal--;
+        raisedShield = false;
+    }
+
     // Resistance/Weakness logic
     if (attack.getType() == damageType::Normal    ||
         attack.getType() == damageType::Slashing  ||
@@ -46,9 +52,11 @@ void Knight::takeDamage(const Attack& attack) {
     }
 }
 
+
+
 void Knight::displayUniqueStats() {
-    //TODO add relevant stats (shield)
-    return;
+
+    if (raisedShield) std::cout<<"-> Shield raised\n";
 }
 
 
@@ -67,9 +75,20 @@ Attack Knight::swordSlash() {
     return attack;
 }
 
+void Knight::raiseShield() {
+
+    if (!raisedShield) {
+        raisedShield = true;
+        std::cout << getName() << " raised their shield!\n";
+    }
+    else
+        std::cout << getName()<<" already has their shield raised.\n";
+}
+
+
 void Knight::performAction(Entity &enemy) {
     int playerChoice;
-    std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike \n";
+    std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike\n5. Raise Shield \n";
     std::cout<<">>";
     std::cin >> playerChoice;
 
@@ -78,6 +97,7 @@ void Knight::performAction(Entity &enemy) {
         case 2: enemy.takeDamage(this->preparationLunge()); break;
         case 3: this->holyVow(); break;
         case 4: enemy.takeDamage(this->opportunityStrike()); break;
+        case 5: this->raiseShield(); break;
         default: std::cout << this->getName() << " stands firmly!\n"; break;
     }
 }

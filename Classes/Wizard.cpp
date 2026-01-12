@@ -118,7 +118,7 @@ void Wizard::performEnemyAction(Entity &player) {
 
     // ABILITIES ---------------------------------------------->
 
-    Attack Wizard::qFireBolt() {
+    Attack Wizard::qFireBolt() const{
 
         Attack attack(damageType::Fire, 1);
         StatusEffect effect(statusEffectType::Burning, 1, 1);
@@ -128,7 +128,7 @@ void Wizard::performEnemyAction(Entity &player) {
         return attack;
     }
 
-    Attack Wizard::qElectricShock() {
+    Attack Wizard::qElectricShock() const{
 
         Attack attack(damageType::Lightning, 1);
         StatusEffect effect(statusEffectType::Electrified, 1, 1);
@@ -138,7 +138,7 @@ void Wizard::performEnemyAction(Entity &player) {
         return attack;
     }
 
-    Attack Wizard::qIceSpike() {
+    Attack Wizard::qIceSpike() const{
 
         Attack attack(damageType::Frost, 1);
         std::cout<<getName()<<" fired Quick Ice Spike!\n";

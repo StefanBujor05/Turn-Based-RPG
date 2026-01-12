@@ -45,13 +45,11 @@ void Viking::takeDamage(const Attack &attack) {
         std::cout<<getName()<<" took "<<damageVal<<" damage!\n";
         loseHealth(damageVal);
     }
-
 }
 
 void Viking::displayUniqueStats() {
     printRage();
 }
-
 
 void Viking::performAction(Entity &enemy) {
 

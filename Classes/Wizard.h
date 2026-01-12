@@ -19,9 +19,9 @@ class Wizard : public Entity {
     AcademicMagic ascension = {0, false};
     std::vector<std::string> quickSpells;
 
-    Attack qFireBolt();
-    Attack qElectricShock();
-    Attack qIceSpike();
+    Attack qFireBolt() const;
+    Attack qElectricShock() const;
+    Attack qIceSpike() const;
 
 
 public:

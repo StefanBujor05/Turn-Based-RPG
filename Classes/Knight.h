@@ -12,7 +12,7 @@ class Knight : public Entity {
 
 private:
     Stance currentStance;
-    //bool raisedShield = false; TODO
+    bool raisedShield = false;
 
 public:
     // Constructor
@@ -30,6 +30,7 @@ public:
     void holyVow();
     Attack preparationLunge();
     Attack opportunityStrike();
+    void raiseShield();
 
     friend std::ostream& operator<<(std::ostream& os, const Knight& k);
 

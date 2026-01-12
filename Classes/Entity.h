@@ -42,6 +42,8 @@ public:
 
     void heal(const int healAmount);
 
+    statusEffectType getStatusEffect() const;
+
     void printHealthBar() const;
     // constructor
 

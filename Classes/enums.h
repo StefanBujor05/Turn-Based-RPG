@@ -12,7 +12,7 @@ enum class damageType {
 };
 
 enum class statusEffectType {
-    None, Electrified, Bleeding, Poisoned, Burning
+    None, Electrified, Bleeding, Poisoned, Burning, Wet
 };
 
 enum class weapons {

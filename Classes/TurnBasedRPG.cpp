@@ -54,8 +54,6 @@ void TurnBasedRPG::enemyActionImproved() {
     player2->takeEffectDamage();
 }
 
-
-
     bool TurnBasedRPG::checkGameOver() const {
         if (player1->getHealthPoints() <= 0) {
             std::cout<<"\nGAME OVER! "<<player2->getName()<<" has won!\n";
@@ -100,7 +98,13 @@ void TurnBasedRPG::setupGame() {
 
     std::cout << "You are playing as " << player1->getName() << "\n";
 
-    player2 = EntityFactory::createEntity(EntityType::Wizard, "Maegistus");
+    try {
+        player2 = EntityFactory::createEntity(EntityType::Wizard, "Maegistus");
+    } catch (const InvalidClassException& e) {
+        std::cout << e.what() << "\n";
+        player2 = nullptr;
+        return;
+    }
 }
 
 
