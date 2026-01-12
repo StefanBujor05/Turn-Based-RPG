@@ -48,6 +48,11 @@ void Viking::takeDamage(const Attack &attack) {
 
 }
 
+void Viking::displayUniqueStats() {
+    printRage();
+}
+
+
 void Viking::performAction(Entity &enemy) {
 
     int playerChoice;

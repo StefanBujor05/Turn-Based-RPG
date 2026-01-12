@@ -32,36 +32,11 @@ void artificialDelay() {
     void TurnBasedRPG::displayStats() const {
         std::cout << "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
         player1->printHealthBar();
-        if (auto* wizard = dynamic_cast<Wizard*>(player1.get())) {
-            wizard->printMana();
-            wizard->printAscensionStatus();
-        }
-        else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player1.get())) {
-            blacksmith->printStats();
-        }
-        else if (const auto* viking = dynamic_cast<Viking*>(player1.get())) {
-            viking->printRage();
-        }
-        else if (const auto* vampire = dynamic_cast<Vampire*>(player1.get())) {
-            vampire->printHemorrhage();
-        }
-
+        player1->displayUniqueStats();
         std::cout<<"\n";
 
         player2->printHealthBar();
-        if (auto* wizard = dynamic_cast<Wizard*>(player2.get())) {
-            wizard->printMana();
-            wizard->printAscensionStatus();
-        }
-        else if (const auto* blacksmith = dynamic_cast<Blacksmith*>(player2.get())) {
-            blacksmith->printStats();
-        }
-        else if (const auto* viking = dynamic_cast<Viking*>(player2.get())) {
-            viking->printRage();
-        }
-        else if (const auto* vampire = dynamic_cast<Vampire*>(player2.get())) {
-            vampire->printHemorrhage();
-        }
+        player2->displayUniqueStats();
 
         std::cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
     }

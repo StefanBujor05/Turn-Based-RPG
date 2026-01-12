@@ -30,6 +30,7 @@ public:
 
     void performAction(Entity &enemy) override;
     void performEnemyAction(Entity& player) override;
+    void displayUniqueStats() override;
 
     void printMana();
 

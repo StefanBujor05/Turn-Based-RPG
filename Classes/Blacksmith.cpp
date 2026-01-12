@@ -60,6 +60,11 @@ void Blacksmith::takeDamage(const Attack& attack) {
     }
 }
 
+void Blacksmith::displayUniqueStats() {
+    printStats();
+}
+
+
     void Blacksmith::performAction(Entity& enemy){
 
         int playerChoice;

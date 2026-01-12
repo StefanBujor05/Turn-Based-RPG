@@ -77,6 +77,12 @@
         }
     }
 
+void Wizard::displayUniqueStats() {
+        printMana();
+    printAscensionStatus();
+}
+
+
 void Wizard::performAction(Entity& enemy) {
         int playerChoice;
         std::cout << "1. Magic Missile\n2. Blunt Staff\n3. Lightning Bolt\n4. Pillar of Fire\n5. Quick Spell\n";

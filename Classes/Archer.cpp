@@ -56,6 +56,11 @@ void Archer::takeDamage(const Attack& attack) {
 
 }
 
+void Archer::displayUniqueStats() {
+    return;
+}
+
+
 void Archer::performAction(Entity& enemy){
 
     int playerChoice;

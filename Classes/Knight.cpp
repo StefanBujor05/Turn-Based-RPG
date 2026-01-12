@@ -46,6 +46,12 @@ void Knight::takeDamage(const Attack& attack) {
     }
 }
 
+void Knight::displayUniqueStats() {
+    //TODO add relevant stats (shield)
+    return;
+}
+
+
 // Ability Definitions
 Attack Knight::swordSlash() {
     Attack attack(damageType::Slashing, 2);

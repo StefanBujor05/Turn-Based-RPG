@@ -32,7 +32,9 @@ public:
 
     virtual void performAction(Entity& enemy) = 0;
     virtual void performEnemyAction(Entity& player) = 0;
+    virtual void displayUniqueStats() = 0;
     void takeEffectDamage();
+
 
     void setEffect(StatusEffect effect);
 

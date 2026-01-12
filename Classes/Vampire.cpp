@@ -45,6 +45,10 @@ void Vampire::takeDamage(const Attack& attack) {
 
 }
 
+void Vampire::displayUniqueStats() {
+    printHemorrhage();
+}
+
 void Vampire::performAction(Entity& enemy) {
 
     int playerChoice;

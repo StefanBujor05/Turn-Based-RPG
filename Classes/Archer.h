@@ -25,6 +25,7 @@ public:
     Archer(const std::string &name, int healthPoints, int maxHealthPoints);
     void performAction(Entity &enemy) override;
     void performEnemyAction(Entity& player) override;
+    void displayUniqueStats() override;
 
     void takeDamage(const Attack& attack) override;
 
