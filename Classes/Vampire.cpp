@@ -49,6 +49,26 @@ void Vampire::displayUniqueStats() {
     printHemorrhage();
 }
 
+void Vampire::displayAbilityDescriptions() const {
+    std::cout<<"Ability descriptions:\n";
+    std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+    std::cout<<"<@> Hemorrhage passive: Build up hemorrhage by dealing damage. When the threshold is met,\n"
+               "buff basic abilities' damage and healing effects.\n";
+    std::cout<<"\n";
+    std::cout<<"<@> Fang Bite: Pierce the enemy's flesh with your fangs and taking a sip of their blood,\n"
+               "healing you in the process. If below half HP, double the healing.\n";
+    std::cout<<"\n";
+    std::cout<<"<@> Blood Splatter: Splash a chalice of blood onto your opponent. If below half HP or \n"
+               "at max hemorrhage, infect the enemy with poison.\n";
+    std::cout<<"\n";
+    std::cout<<"<@> Blood Sacrifice: Tear a part of your flesh and lose 2 HP and increase hemorrhage.\n";
+    std::cout<<"\n";
+    std::cout<<"<@> Blood Transfusion: Only usable at 1 HP. Swap parts of your opponent's blood with yours,\n"
+               "dealing massive damage and healing yourself\n";
+    std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+}
+
+
 void Vampire::performAction(Entity& enemy) {
 
     int playerChoice;

@@ -25,6 +25,8 @@ public:
     void performEnemyAction(Entity& player) override;
     void displayUniqueStats() override;
 
+    void displayAbilityDescriptions() const override;
+
     // Abilities (declared here, defined in .cpp)
     [[nodiscard]]Attack swordSlash();
     void holyVow();

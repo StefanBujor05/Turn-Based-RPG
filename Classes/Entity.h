@@ -34,6 +34,7 @@ public:
     virtual void performEnemyAction(Entity& player) = 0;
     virtual void displayUniqueStats() = 0;
     void takeEffectDamage();
+    virtual void displayAbilityDescriptions() const = 0;
 
 
     void setEffect(StatusEffect effect);

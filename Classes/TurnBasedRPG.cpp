@@ -97,6 +97,7 @@ void TurnBasedRPG::setupGame() {
     }
 
     std::cout << "You are playing as " << player1->getName() << "\n";
+    player1->displayAbilityDescriptions();
 
     try {
         player2 = EntityFactory::createEntity(EntityType::Wizard, "Maegistus");

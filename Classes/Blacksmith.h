@@ -24,6 +24,7 @@ class Blacksmith: public Entity {
     void performAction(Entity& enemy) override;
     void performEnemyAction(Entity& player) override;
     void displayUniqueStats() override;
+    void displayAbilityDescriptions() const override;
 
     void takeDamage(const Attack& attack) override;
     void printStats ()const;

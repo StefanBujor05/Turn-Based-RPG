@@ -60,6 +60,22 @@ void Archer::displayUniqueStats() {
     return;
 }
 
+void Archer::displayAbilityDescriptions() const {
+    std::cout<<"Ability descriptions:\n";
+    std::cout<<"...................................................................................................\n";
+    std::cout<<"-> Hide: Dissappear into the surroundings and hide. Critical chance\n"
+               "is increased while hidden, while reducing the chance to\n"
+               "get hit, altough attacking or being attacked will reveal your location.\n";
+    std::cout<<"\n";
+    std::cout<<"-> Arrow shot: Fire an arrow dealing piercing damage.\n";
+    std::cout<<"\n";
+    std::cout<<"-> Poison Arrow: Fire a weaker arrow that poisons the enemy.\n";
+    std::cout<<"\n";
+    std::cout<<"-> Elven Healing: Use a mixture of various plants to heal wounds.\n";
+    std::cout<<"...................................................................................................\n";
+}
+
+
 
 void Archer::performAction(Entity& enemy){
 

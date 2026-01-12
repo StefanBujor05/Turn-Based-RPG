@@ -115,6 +115,27 @@ void Wizard::performEnemyAction(Entity &player) {
         this->checkAscension();
 }
 
+void Wizard::displayAbilityDescriptions() const {
+        std::cout<<"Ability descriptions:\n";
+        std::cout<<"<XX%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%XX>\n";
+        std::cout<<"->Ascension passive: consuming mana advances your magic knowledge, eventually raching and\n"
+                   "ascended state, during which all spells are buffed.\n";
+        std::cout<<"\n";
+        std::cout<<"->Blunt Staff: A wizard's last resort. Deals a small amount of Normal damage,\n"
+                   "but consumes no mana.\n";
+        std::cout<<"\n";
+        std::cout<<"->Lightning Bolt: Hurl a 9000V lightning bolt at your enemy, shocking their heart and\n"
+                   "electrifying them.\n";
+        std::cout<<"\n";
+        std::cout<<"->Pillar of Fire: Thrust hands into the ground and realse risng pillars of fire at the\n"
+                   "enemy's location, burning them.\n";
+        std::cout<<"\n";
+        std::cout<<"->Quick Spell: Quickly cast 1 of 3 available spells in your belt-spell-book. Once used,\n"
+                   "the same quickspell cannot be cast again, as the page is burned.\n";
+        std::cout<<"<XX%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%XX>\n";
+}
+
+
 
     // ABILITIES ---------------------------------------------->
 

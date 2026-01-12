@@ -64,6 +64,23 @@ void Blacksmith::displayUniqueStats() {
     printStats();
 }
 
+void Blacksmith::displayAbilityDescriptions() const {
+    std::cout<<"Ability descriptions:\n";
+    std::cout<<"_______________________________________________________________________________________________\n";
+    std::cout<<"{} Choose weapon: Forge 1 out of 3 weapons: Claymore, Axe or Hammer,\n"
+               "each with their own stats.\n";
+    std::cout<<"\n";
+    std::cout<<"{} Enchance weapon: Use your blacksmithing knowledge to strengthen your\n"
+               "current weapon, increasing it's damage.\n";
+    std::cout<<"\n";
+    std::cout<<"{} Enchance armour: Upgrade your current armour, resulting in a higher\n"
+               "effective HP.\n";
+    std::cout<<"\n";
+    std::cout<<"{} Weapon Attack: Use the currently forged weapon to attack your enemy.\n"
+               "If lacking one, use your fists.\n";
+    std::cout<<"_______________________________________________________________________________________________\n";
+}
+
 
     void Blacksmith::performAction(Entity& enemy){
 

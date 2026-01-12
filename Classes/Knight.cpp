@@ -85,9 +85,30 @@ void Knight::raiseShield() {
         std::cout << getName()<<" already has their shield raised.\n";
 }
 
+void Knight::displayAbilityDescriptions() const {
+    std::cout<<"Ability descriptions:\n";
+    std::cout<<"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
+    std::cout<<"<>Sword Slash: Slash you enemy with force. Deals 2 slashing damage\n";
+    std::cout<<"\n";
+    std::cout<<"<>Preparation Lunge: Lunge at the enemy, piercing them with the\n"
+               "tip of your sword and positioning yourself for a stronger attack.\n"
+               "Your next attack deals increased damage.\n";
+    std::cout<<"\n";
+    std::cout<<"<>Oportunity Strike: Slash at the enemy. If you're properly positioned, double\n"
+               "the bonus damage you would've dealt.";
+    std::cout<<"\n";
+    std::cout<<"<>Holy vow: A knight's standard prayer. Heal 1 HP or increase max HP by 1 if already full.\n";
+    std::cout<<"\n";
+    std::cout<<"<>Raise Shield: Raise your shield and half the damage of the next attack.\n"
+               "Naturally ineffectice against magic and holy damage.\n";
+    std::cout<<"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
+}
+
+
 
 void Knight::performAction(Entity &enemy) {
     int playerChoice;
+
     std::cout << "1. Sword Slash\n2. Preparation Lunge\n3. Holy Vow\n4. Opportunity Strike\n5. Raise Shield \n";
     std::cout<<">>";
     std::cin >> playerChoice;
@@ -147,9 +168,8 @@ Attack Knight::opportunityStrike() {
     return attack;
 }
 
-// Stream Operator Definition
 std::ostream& operator<<(std::ostream& os, const Knight& k) {
-    // Cast to the base class (Entity) to reuse its operator<< logic
+
     os << static_cast<const Entity&>(k);
     os << k.currentStance << '\n';
     return os;

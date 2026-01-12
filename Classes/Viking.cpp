@@ -51,6 +51,24 @@ void Viking::displayUniqueStats() {
     printRage();
 }
 
+void Viking::displayAbilityDescriptions() const {
+    std::cout<<"Ability descriptions:\n";
+    std::cout<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+    std::cout<<"- Rage passive: Dealing damage increases rage. Upon reaching it's threshold,"
+               "damaging abilities are enchanced, but supportive ones are disabled\n";
+    std::cout<<"\n";
+    std::cout<<"- Ancestral scream: Call upon your ancestors to protect you, reducing "
+               "the damage of the next 2 incoming attacks\n";
+    std::cout<<"\n";
+    std::cout<<"- Axe chop: Slam your axe into the enemy and cause them to bleed.\n";
+    std::cout<<"\n";
+    std::cout<<"- Spirit Sweep: Slash the enemy with a spiritual axe, dealing magic damage.\n";
+    std::cout<<"\n";
+    std::cout<<"- Healing prayer: A standard prayer that heals 2 HP.\n";
+    std::cout<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+}
+
+
 void Viking::performAction(Entity &enemy) {
 
     int playerChoice;
