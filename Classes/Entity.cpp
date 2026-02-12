@@ -28,6 +28,7 @@ int Entity::entityCount = 0;
         }
     }
 
+
     statusEffectType Entity::getStatusEffect() const {
         return status.getEffectType();
     }
