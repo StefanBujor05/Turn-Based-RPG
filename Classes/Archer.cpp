@@ -11,7 +11,7 @@ void Archer::takeDamage(const Attack& attack) {
     int damageVal = attack.getDamage();
     StatusEffect effect = attack.getStatusEffect();
 
-    RNG rng = RNG();
+    //RNG rng = RNG();
     int hitWhileHiddenRol = rng.getInt(1, 20);
 
     // check if archer is hidden
